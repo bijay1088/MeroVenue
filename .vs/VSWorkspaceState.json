@@ -2,7 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\src",
-    "\\src\\components"
+    "\\src\\components",
+    "\\src\\images"
   ],
+  "SelectedNode": "\\src\\components\\ToDoList.js",
   "PreviewInSolutionExplorer": false
 }

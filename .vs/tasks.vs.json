@@ -1,0 +1,15 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskLabel": "task-Auth",
+      "appliesTo": "src/components/Auth.js",
+      "type": "launch"
+    },
+    {
+      "taskLabel": "task-Auth",
+      "appliesTo": "src/components/Auth.js",
+      "type": "launch"
+    }
+  ]
+}
