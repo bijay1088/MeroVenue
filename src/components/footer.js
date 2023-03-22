@@ -11,54 +11,23 @@ import {
 import Logo from "../images/MeroVenue-logos_white.png"
 
 export default function Footer() {
+
+    const admin = window.localStorage.getItem('isAdmin');
+
+
     return (
         <MDBFooter className='text-center' color='white' bgColor='dark'>
-            <MDBContainer className='p-4'>
-                {/*<section className='mb-4'>*/}
-                {/*    <MDBBtn outline color="light" floating className='m-1' href='#!' role='button'>*/}
-                {/*        <MDBIcon fab icon='facebook-f' />*/}
-                {/*    </MDBBtn>*/}
+            {admin ?
 
-                {/*    <MDBBtn outline color="light" floating className='m-1' href='#!' role='button'>*/}
-                {/*        <MDBIcon fab icon='twitter' />*/}
-                {/*    </MDBBtn>*/}
+                (
+                <></>
+                ) :
+                (
 
-                {/*    <MDBBtn outline color="light" floating className='m-1' href='#!' role='button'>*/}
-                {/*        <MDBIcon fab icon='google' />*/}
-                {/*    </MDBBtn>*/}
-
-                {/*    <MDBBtn outline color="light" floating className='m-1' href='#!' role='button'>*/}
-                {/*        <MDBIcon fab icon='instagram' />*/}
-                {/*    </MDBBtn>*/}
-
-                {/*    <MDBBtn outline color="light" floating className='m-1' href='#!' role='button'>*/}
-                {/*        <MDBIcon fab icon='linkedin-in' />*/}
-                {/*    </MDBBtn>*/}
-
-                {/*    <MDBBtn outline color="light" floating className='m-1' href='#!' role='button'>*/}
-                {/*        <MDBIcon fab icon='github' />*/}
-                {/*    </MDBBtn>*/}
-                {/*</section>*/}
+                    <MDBContainer className='p-4'>
 
                 <section className=''>
                     <form action=''>
-                        {/*<MDBRow className='d-flex justify-content-center'>*/}
-                        {/*    <MDBCol size="auto">*/}
-                        {/*        <p className='pt-2'>*/}
-                        {/*            <strong>Sign up for our newsletter</strong>*/}
-                        {/*        </p>*/}
-                        {/*    </MDBCol>*/}
-
-                        {/*    <MDBCol md='5' start>*/}
-                        {/*        <MDBInput contrast type='email' label='Email address' className='mb-4' />*/}
-                        {/*    </MDBCol>*/}
-
-                        {/*    <MDBCol size="auto">*/}
-                        {/*        <MDBBtn outline color='light' type='submit' className='mb-4'>*/}
-                        {/*            Subscribe*/}
-                        {/*        </MDBBtn>*/}
-                        {/*    </MDBCol>*/}
-                        {/*</MDBRow>*/}
                     </form>
                 </section>
 
@@ -75,59 +44,10 @@ export default function Footer() {
                         <MDBRow className='mt-3'>
                             <MDBCol md='3' lg='4' xl='3' className='mx-auto mb-4'>
                                 <h6 className='text-uppercase fw-bold mb-4'>
-                                    <MDBIcon color='secondary' icon='gem' className='me-3' />
                                     <img src={Logo} height="200" />
                                 </h6>
                                 
                             </MDBCol>
-
-                            {/*<MDBCol md='2' lg='2' xl='2' className='mx-auto mb-4'>*/}
-                            {/*    <h6 className='text-uppercase fw-bold mb-4'>Products</h6>*/}
-                            {/*    <p>*/}
-                            {/*        <a href='#!' className='text-reset'>*/}
-                            {/*            Angular*/}
-                            {/*        </a>*/}
-                            {/*    </p>*/}
-                            {/*    <p>*/}
-                            {/*        <a href='#!' className='text-reset'>*/}
-                            {/*            React*/}
-                            {/*        </a>*/}
-                            {/*    </p>*/}
-                            {/*    <p>*/}
-                            {/*        <a href='#!' className='text-reset'>*/}
-                            {/*            Vue*/}
-                            {/*        </a>*/}
-                            {/*    </p>*/}
-                            {/*    <p>*/}
-                            {/*        <a href='#!' className='text-reset'>*/}
-                            {/*            Laravel*/}
-                            {/*        </a>*/}
-                            {/*    </p>*/}
-                            {/*</MDBCol>*/}
-
-                            {/*<MDBCol md='3' lg='2' xl='2' className='mx-auto mb-4'>*/}
-                            {/*    <h6 className='text-uppercase fw-bold mb-4'>Useful links</h6>*/}
-                            {/*    <p>*/}
-                            {/*        <a href='#!' className='text-reset'>*/}
-                            {/*            Pricing*/}
-                            {/*        </a>*/}
-                            {/*    </p>*/}
-                            {/*    <p>*/}
-                            {/*        <a href='#!' className='text-reset'>*/}
-                            {/*            Settings*/}
-                            {/*        </a>*/}
-                            {/*    </p>*/}
-                            {/*    <p>*/}
-                            {/*        <a href='#!' className='text-reset'>*/}
-                            {/*            Orders*/}
-                            {/*        </a>*/}
-                            {/*    </p>*/}
-                            {/*    <p>*/}
-                            {/*        <a href='#!' className='text-reset'>*/}
-                            {/*            Help*/}
-                            {/*        </a>*/}
-                            {/*    </p>*/}
-                            {/*</MDBCol>*/}
 
                             <MDBCol md='4' lg='3' xl='3' className='mx-auto mb-md-0 mb-4'>
                                 <h6 className='text-uppercase fw-bold mb-4'>Contact</h6>
@@ -151,10 +71,15 @@ export default function Footer() {
                 </section>
             </MDBContainer>
 
+
+                    
+                )}
+
             <div className='text-center p-3' style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}>
                 © 2023 Copyright: Bijay Baniya
-               
+
             </div>
+            
         </MDBFooter>
     );
 }

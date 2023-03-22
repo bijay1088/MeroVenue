@@ -1,0 +1,53 @@
+.venue-detail-container {
+    margin-top: 50px;
+}
+
+.venue-detail-image {
+    border-radius: 10px;
+    height: 400px;
+    object-fit: cover;
+}
+
+.venue-detail-content {
+    margin-top: 30px;
+}
+
+.venue-detail-rating {
+    color: #ffca3a;
+    font-size: 1.5rem;
+}
+
+.venue-detail-price {
+    margin-top: 30px;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.venue-detail-price-text {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.venue-detail-price-amount {
+    display: block;
+    font-size: 2rem;
+    margin-bottom: 5px;
+}
+.carousel-item {
+    height: 800px; /* set the height to your desired fixed size */
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+}
+
+    .carousel-item img {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+    }
+
+@media screen and (max-width: 800px) {
+    .carousel-item {
+        height: 400px; /* or any other fixed height for smaller screens */
+    }
+}

@@ -1,0 +1,120 @@
+
+.sidenav {
+    height: 7%;
+    width: 250px; /* Set initial width of navbar */
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: -190px; /* Set initial position off-screen */
+    
+    overflow-x: hidden;
+    transition: 0.3s; /* Add transition property */
+    overflow-y: hidden;
+    border-top-right-radius: 30px; /* add border radius to top right corner */
+    border-bottom-right-radius: 30px;
+    align-items: center;
+    background-color: transparent;
+}
+    .sidenav.open {
+        left: 0; /* Move navbar into view */
+        border-top-right-radius: 0; /* add border radius to top right corner */
+        border-bottom-right-radius: 0;
+        background-color: #111;
+    }
+        .sidenav.open a:hover {
+            color: #f1f1f1;
+        }
+
+    .sidenav a {
+        padding: 3px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 25px;
+        color: #818181;
+        display: block;
+        transition: 0.3s;
+    }
+
+        .sidenav a:hover {
+            color: black;
+        }
+
+    .sidenav .closebtn {
+        position: absolute;
+        top: 0;
+        right: 15px;
+        font-size: 36px;
+        margin-left: 50px;
+    }
+.sidenav-content {
+    height: 100%;
+    width: 200px; /* Set initial width of navbar */
+    position: fixed;
+    z-index: 1;
+    top: 7%;
+    left: -200px; /* Set initial position off-screen */
+    background-color: #111;
+    overflow-x: hidden;
+    padding-top: 60px;
+    transition: 0.3s;
+}
+
+.sidenav-content.open{
+    left: 0;
+
+}
+
+.sidenav-content a{
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+    .sidenav-content a:last-child {
+        position: absolute;
+        bottom: 100px;
+        color: #818181;
+        cursor: pointer;
+    }
+
+    .sidenav-content a:last-child:hover{
+        color: #f1f1f1;
+    }
+    .sidenav-content a:hover {
+        color: #f1f1f1;
+    }
+
+
+
+.open {
+    width: 250px;
+}
+
+
+
+@media only screen and (max-width: 768px) {
+    .sidenav {
+        width: 200px;
+        left: -140px
+    }
+    .sidenav a {
+        font-size: 16px;
+        padding: 3px 8px 8px 32px;
+    }
+
+    .sidenav .closebtn {
+        font-size: 30px;
+    }
+
+    .sidenav-content a {
+        font-size: 16px;
+        padding: 5px 8px 5px 32px;
+    }
+    .sidenav-content{
+        width: 200px;
+    }
+}
+
+
+
