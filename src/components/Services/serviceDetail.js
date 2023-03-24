@@ -90,7 +90,7 @@ function ServiceDetail(props) {
 
                                     
                                 </MDBCol>
-                                <MDBCol md="6">
+                                <MDBCol md="6" className="bg-light px-4 py-4">
                                     <div className="mb-4">
                                         <h1>{service.serviceName}</h1>
                                     </div>
@@ -104,40 +104,50 @@ function ServiceDetail(props) {
                                         </div>
                                         <span>310</span>
                                     </div>
-                                    <div className="mb-3">
-                                        <strong>Category:  </strong>
-                                        <MDBIcon fas icon="tag" />
-                                        <span>&nbsp; </span>
-                                        {service.serviceType}
+                                    <div className="d-flex justify-content-start">
+                                        <div>
+                                            <div className="mb-3">
+                                                <MDBIcon fas icon="tag" />
+                                                <strong className="mx-2">Category:  </strong>
+                                                <span>&nbsp; </span>
+                                                {service.serviceType}
+                                            </div>
+                                            <div className="mb-3">
+                                                <MDBIcon fas icon="map-marker-alt" />
+                                                <strong className="mx-2">Address:  </strong>
+                                                <span>&nbsp; {service.location}</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="mx-5">
+                                            <div className="mb-3">
+                                                <MDBIcon fas icon="phone" />
+                                                <strong className="mx-2">Phone:  </strong>
+                                                <span>&nbsp; {service.contactInfo}</span>
+                                            </div>
+                                            <div className="mb-3">
+                                                <MDBIcon fas icon="envelope" />
+                                                <strong className="mx-2">Email:  </strong>
+                                                <span>&nbsp; {service.email}</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="mb-3">
-                                        <strong>Address:  </strong>
-                                        <MDBIcon fas icon="map-marker-alt" />
-                                        <span>&nbsp; {service.location}</span>
-                                    </div>
-                                    <div className="mb-3">
-                                        <strong>Phone:  </strong>
-                                        <MDBIcon fas icon="phone" />
-                                        <span>&nbsp; {service.contactInfo}</span>
-                                    </div>
-                                    <div className="mb-3">
-                                        <strong>Email:  </strong>
-                                        <MDBIcon fas icon="envelope" />
-                                        <span>&nbsp; {service.email}</span>
-                                    </div>
-                                    <div className="mb-3">
-                                        <strong>Price:  </strong>
-                                        <MDBIcon fas icon="money-bill" />
-                                        <span>&nbsp; {service.price}</span>
-                                    </div>
-                                    <p className="mb-4 mb-md-0 mt-5">
+
+                                    <div className="mb-4 mb-md-0 mt-3">
+
+                                        <div className="fs-5 mb-3">
+                                            <strong>Price:  </strong>
+                                            <MDBIcon fas icon="money-bill" />
+                                            <span>&nbsp; {service.price}</span>
+                                        </div>
+
                                         <h4>
                                             About &nbsp;
                                             <MDBIcon fas icon="info-circle" />
                                         </h4>
                                         
                                         {service.about }
-                                    </p>
+                                    </div>
 
                                     <div className="mt-5">
                                         <MDBBtn

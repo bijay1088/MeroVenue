@@ -28,12 +28,12 @@ function App() {
                 
             </div>
             <div className={`sidenav-content ${isOpen ? 'open' : ''}`}>
-                <a href="/">Add new admin</a>
+                <a href="/">Dashboard</a>
+                <a href="/addAdmin">Add new admin</a>
                 <a href="/venue">Venue</a>
                 <a href="/AcceptVendor">Add Vendor</a>
                 <a href="/users">Users</a>
-                <a href="#">Contact</a>
-                <a onClick={logout}>Logout</a>
+                <a href ="" onClick={logout}>Logout</a>
 
             </div>
 

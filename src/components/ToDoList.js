@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,19 +7,78 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 
-function ToDoList() {
-    const [showModal, setShowModal] = useState(false);
+function ToDo() {
     const [task, setTask] = useState('');
     const [tasks, setTasks] = useState([]);
+    const [remove, setRemove] = useState(false);
+
+    function handleAddTask(){
+        setTasks([...tasks, { text: task, done: false }]);
+        setTask('');
+    };
+
+    useEffect(() => {
+        setToDo();
+    }, [tasks]);
+
+    function getTodo() {
+        fetch("http://localhost:5000/getToDoList", {
+            method: "POST",
+            crossDomain: true,
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                "Access-Control-Allow-Origin": "*"
+            },
+            body: JSON.stringify({
+                token: window.localStorage.getItem("token"),
+            }),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.data) {
+                    setTasks(data.data);
+                }
+
+
+            })
+    }
+
+    function setToDo() {
+        if (tasks.length > 0 || remove) {
+            fetch("http://localhost:5000/setToDoList", {
+                method: "POST",
+                crossDomain: true,
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                    "Access-Control-Allow-Origin": "*"
+                },
+                body: JSON.stringify({
+                    token: window.localStorage.getItem("token"),
+                    toDoList: tasks
+                }),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.data) {
+                        setRemove(false);
+                    }
+                });
+        }
+    }
+
+    useEffect(() => {
+        getTodo();
+    }, []);
+
+    
 
     const handleTaskInput = event => {
         setTask(event.target.value);
     };
 
-    const handleAddTask = () => {
-        setTasks([...tasks, { text: task, done: false }]);
-        setTask('');
-    };
+    
 
     const handleTaskStatusToggle = index => {
         setTasks(
@@ -33,35 +91,31 @@ function ToDoList() {
         );
     };
 
-    const handleTaskDelete = index => {
+    function handleTaskDelete(index) {
+        setRemove(true);
         setTasks(tasks.filter((task, taskIndex) => taskIndex !== index));
-    };
+    }
 
-    const handleClearTasks = () => {
+    function handleClearTasks() {
+        setRemove(true);
         setTasks([]);
-    };
+    }
+
+
 
     return (
         <>
-            <Button className="ContainerOpened" onClick={() => setShowModal(true)}>
-                +
-            </Button>
-            <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
-                <Modal.Header closeButton>
-                    <Modal.Title id="example-modal-sizes-title-lg">To Do List</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form>
-                        <Form.Control
-                            type="text"
-                            placeholder="Add task"
-                            value={task}
-                            onChange={handleTaskInput}
-                        />
-                        <Button className="my-3" variant="primary" onClick={handleAddTask}>
-                            Add Task
-                        </Button>
-                    </Form>
+            <Form>
+                <Form.Control
+                    type="text"
+                    placeholder="Add task"
+                    value={task}
+                    onChange={handleTaskInput}
+                />
+                <Button className="my-3" variant="primary" onClick={handleAddTask}>
+                    Add Task
+                </Button>
+            </Form>
                     <ListGroup className="my-3">
                         {tasks.map((task, index) => (
                             <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center">
@@ -72,11 +126,11 @@ function ToDoList() {
                                     />
                                 )}
                                 <span style={{ textDecoration: task.done ? 'line-through' : 'none' }}>
-                                    &nbsp; &nbsp; 
+                                    &nbsp; &nbsp;
                                     {task.text}
-                                    &nbsp; &nbsp; 
+                                    &nbsp; &nbsp;
                                 </span>
-                                
+
                                 <FontAwesomeIcon
                                     icon={faTrashAlt}
                                     onClick={() => handleTaskDelete(index)}
@@ -87,10 +141,8 @@ function ToDoList() {
                     <Button variant="danger" onClick={handleClearTasks}>
                         Clear Tasks
                     </Button>
-                </Modal.Body>
-            </Modal>
         </>
     );
 }
 
-export default ToDoList;
+export default ToDo;

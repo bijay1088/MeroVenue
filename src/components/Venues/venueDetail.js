@@ -105,7 +105,7 @@ function VenueDetail(props) {
 
                                     
                                 </MDBCol>
-                                <MDBCol md="6">
+                                <MDBCol md="6" className="bg-light px-4 py-4">
                                     <div className="mb-4">
                                         <h1>{venue.venueName}</h1>
                                     </div>

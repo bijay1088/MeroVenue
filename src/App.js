@@ -5,7 +5,6 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import Login from "./components/Login"
 import Register from "./components/registerform"
 import Home from "./components/home"
-import Contact from "./components/contact"
 import Footer from "./components/footer"
 import ManagementTab from "./components/ManagementTab"
 import NotFoundPage from "./components/Error"
@@ -17,6 +16,7 @@ import Map from "./components/Venues/map"
 import Services from "./components/Services/services"
 import ServiceDetail from "./components/Services/serviceDetail"
 
+import Dashboard from "./components/Admins/dashboard"
 import AdminBar from "./components/Admins/adminPanel"
 import Admin from "./components/Admins/admin"
 import Venue from "./components/Admins/venue"
@@ -47,7 +47,8 @@ function App() {
                 <Routes>
                     {isAdmin && (
                         <>
-                            <Route path="/" element={<Admin />} />
+                            <Route path="/" element={<Dashboard/>} />
+                            <Route path="/addAdmin" element={<Admin />} />
                             <Route path="/venue" element={<Venue />} />
                             <Route path="/acceptVendor" element={<AcceptVendor />} />
                             <Route path="/users" element={<Users />} />
@@ -63,12 +64,13 @@ function App() {
                             <Route path="/venueDetail/:id" element={<VenueDetail />} />
                             <Route path="/kyc" element={<KYCForm />} />
                             <Route path="/addservice" element={<AddService />} />
+                            <Route path="/services" element={<Services />} />
+                            <Route path="/serviceDetail/:id" element={<ServiceDetail />} />
                         </>
                     )}
                     {isCustomer && (
                         <>
                             <Route path="/" element={<Home />} />
-                            <Route path="/contact" element={<Contact />} />
                             <Route path="/venues" element={<Venues />} />
                             <Route path="/venueDetail/:id" element={<VenueDetail />} />
                             <Route path="/services" element={<Services />} />

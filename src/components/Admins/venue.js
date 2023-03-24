@@ -126,7 +126,7 @@ export default function Venue() {
                 <Table responsive>
                     <thead>
                         <tr>
-                            <th colSpan={6}><h3>Accept Venue</h3></th>
+                            <th colSpan={6}><h3>Venues</h3></th>
                         </tr>
                         <tr>
                             <th>#</th>

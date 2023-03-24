@@ -41,12 +41,6 @@ export default function Menu() {
                                 Services
                             </Link>
                         </Nav.Link>
-                        <Nav.Link>
-                            {' '}
-                            <Link className="text-decoration-none  navbar-tab" to="/contact">
-                                Contact Us
-                            </Link>
-                        </Nav.Link>
                         {vendor ? (
                             <><Nav.Link>
                                 {' '}
