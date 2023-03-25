@@ -47,105 +47,127 @@ function Package() {
         priceCalculator();
     }, [services, venue]);
 
-    //function getVenue(id) {
-    //    fetch(`http://localhost:5000/getVenue/${id}`, {
-    //        method: "GET",
-    //    })
-    //        .then((res) => res.json())
-    //        .then((data) => {
-    //            setVenue(data.data);
+    function printReceipt() {
+        const current = new Date();
+        const printContent1 = document.getElementById("venueContent").innerHTML;
+        const printContent2 = document.getElementById("serviceContent").innerHTML;
+        const newWindow = window.open();
+        newWindow.document.write(`
+        <html>
+          <head>
+            <title>Receipt</title>
+            <style>
+            h1, p {
+              font-family: Lato;
+            }
+            table {
+              font-family: arial, sans-serif;
+              border-collapse: collapse;
+              width: 100%;
+            }
 
-    //        });
+            td, th {
+              border: 1px solid #dddddd;
+              text-align: left;
+              padding: 8px;
+            }
 
-    //}
 
-    //async function getVenue(id) {
-    //    const res = await fetch(`http://localhost:5000/getVenue/${id}`, {
-    //        method: "GET",
-    //    });
-    //    const data = await res.json();
-    //    setVenue(data.date);
+            </style>
+          </head>
+          <body>
+          <h1>Mero Venue</h1>
+          <h3>Receipt</h3>
+          <h3>Date: ${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}</h3>
+        </table>
+            ${printContent1}
+            </br>
+            ${printContent2}
+            <h2>Total Pice:  ${totalPrice}</h2>
+          </body>
+        </html>
+      `);
+        newWindow.print();
+        newWindow.close();
+    }
 
-    //}
 
-    //function getService(id) {
-    //    fetch(`http://localhost:5000/getService/${id}`, {
-    //        method: "GET",
-    //    })
-    //        .then((res) => res.json())
-    //        .then((data) => {
-    //            setServices((services) => [...services, data.data])
-    //        });
-    //}
-
-    
 
     return (
         <>
-           <Table striped bordered hover className="text-center">
-                <thead>
-                    <tr>
-                        <th colSpan="2">Venues</th>
-                    </tr>
-                </thead>
-                {venue ? <>
-                    <tbody>
-
+            <div id="venueContent">
+                <Table striped bordered hover className="text-center">
+                    <thead>
                         <tr>
-                            <th>
-                                {venue.venueName}
-                            </th>
-                            <th>
-                                {venue.price}
-                            </th>
+                            <th colSpan="3">Venues</th>
                         </tr>
-                    </tbody>
-                </> :
-                    <tbody>
-                        <tr>
-                            <th colSpan="2">No Venue Added.</th>
-                        </tr>
-                    </tbody>
+                    </thead>
+                    {venue ? <>
+                        <tbody>
 
-                 }
-           </Table>
-           <Table striped bordered hover className="text-center">
-                <thead>
-                    <tr>
-                        <th colSpan="3">Services</th>
-                    </tr>
-                </thead>
-                {services ? <>
-                    <tbody>
-                        {services.map((service) => (
                             <tr>
                                 <th>
-                                    {service.serviceName}
+                                    {venue.venueName}
                                 </th>
+                                <th></th>
                                 <th>
-                                    {service.serviceType}
-                                </th>
-                                <th>
-                                    {service.price}
+                                    {venue.price}
                                 </th>
                             </tr>
-                        ))}
-                    </tbody>
+                        </tbody>
+                    </> :
+                        <tbody>
+                            <tr>
+                                <th colSpan="2">No Venue Added.</th>
+                            </tr>
+                        </tbody>
 
-                </> :
-                    <tbody>
+                    }
+                </Table>
+            </div>
+            <div id="serviceContent">
+                <Table striped bordered hover className="text-center">
+                    <thead>
                         <tr>
-                            <th colSpan="3">No Services Added.</th>
+                            <th colSpan="3">Services</th>
                         </tr>
-                    </tbody>
+                    </thead>
+                    {services ? <>
+                        <tbody>
+                            {services.map((service) => (
+                                <tr>
+                                    <th>
+                                        {service.serviceName}
+                                    </th>
+                                    <th>
+                                        {service.serviceType}
+                                    </th>
+                                    <th>
+                                        {service.price}
+                                    </th>
+                                </tr>
+                            ))}
+                        </tbody>
 
-                }    
-            </Table>
+                    </> :
+                        <tbody>
+                            <tr>
+                                <th colSpan="3">No Services Added.</th>
+                            </tr>
+                        </tbody>
+
+                    }
+                </Table>
+                
+
+            </div>
             <div className="d-flex justify-content-end">
                 <h5>Total price: {totalPrice}</h5>&nbsp;&nbsp;&nbsp;
-                <Button variant="primary">Checkout</Button>{' '}
             </div>
-
+            <div className="d-flex justify-content-end">
+                <Button variant="primary" class="hide-on-print" onClick={printReceipt}>Checkout</Button>{' '}
+            </div>
+           
         </>
     );
     

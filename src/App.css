@@ -108,5 +108,14 @@ label {
     width: 100vw;
     height: 100vh;
 }
+@media print {
+    .hide-on-print {
+        display: none;
+    }
+
+    .print-only {
+        display: block;
+    }
+}
 
 
