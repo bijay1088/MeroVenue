@@ -62,37 +62,43 @@ function ServiceDisplay(props) {
     };
 
     function appPackage(id) {
-        fetch("http://localhost:5000/setPackageService", {
-            method: "POST",
-            crossDomain: true,
-            headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-                "Access-Control-Allow-Origin": "*"
-            },
-            body: JSON.stringify({
-                token: window.localStorage.getItem("token"),
-                serviceID: id
-            }),
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.status == "success") {
-                    setToastTitle("Success");
-                    setToastBody("This service has been added successfully.");
-                    showToast(3000);
-                }
-                else if(data.status == "error") {
-                    setToastTitle("Error");
-                    setToastBody(data.message);
-                    showToast(3000);
-                }
-                else if(data.status == "exist") {
-                    setToastTitle("Already Exist");
-                    setToastBody(data.message);
-                    showToast(3000);
-                }
-            });
+        const loggedIn = window.localStorage.getItem('loggedIn');
+        if (loggedIn) {
+            fetch("http://localhost:5000/setPackageService", {
+                method: "POST",
+                crossDomain: true,
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                    "Access-Control-Allow-Origin": "*"
+                },
+                body: JSON.stringify({
+                    token: window.localStorage.getItem("token"),
+                    serviceID: id
+                }),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.status == "success") {
+                        setToastTitle("Success");
+                        setToastBody("This service has been added successfully.");
+                        showToast(3000);
+                    }
+                    else if (data.status == "error") {
+                        setToastTitle("Error");
+                        setToastBody(data.message);
+                        showToast(3000);
+                    }
+                    else if (data.status == "exist") {
+                        setToastTitle("Already Exist");
+                        setToastBody(data.message);
+                        showToast(3000);
+                    }
+                });
+        } else {
+            const href = window.location.href;
+            navigate("/login", { state: { href } });
+        }
 
     }
 

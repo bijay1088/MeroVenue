@@ -40,37 +40,43 @@ function VenueDisplay(props) {
     };
 
     function appPackage(id) {
-        fetch("http://localhost:5000/setPackageVenue", {
-            method: "POST",
-            crossDomain: true,
-            headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-                "Access-Control-Allow-Origin": "*"
-            },
-            body: JSON.stringify({
-                token: window.localStorage.getItem("token"),
-                venueID: id
-            }),
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.status == "active") {
-                    setToastTitle("Exisitng Venue");
-                    setToastBody("You have already added venue to list.");
-                    showToast(5000);
-                }
-                else if (data.status == "success") {
-                    setToastTitle("Success");
-                    setToastBody("Venue has been added successfully.");
-                    showToast(3000);
-                }
-                else if (data.status == "error") {
-                    setToastTitle("Error");
-                    setToastBody(data.message);
-                    showToast(3000);
-                } 
-            });
+        const loggedIn = window.localStorage.getItem('loggedIn');
+        if (loggedIn) {
+            fetch("http://localhost:5000/setPackageVenue", {
+                method: "POST",
+                crossDomain: true,
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                    "Access-Control-Allow-Origin": "*"
+                },
+                body: JSON.stringify({
+                    token: window.localStorage.getItem("token"),
+                    venueID: id
+                }),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.status == "active") {
+                        setToastTitle("Exisitng Venue");
+                        setToastBody("You have already added venue to list.");
+                        showToast(5000);
+                    }
+                    else if (data.status == "success") {
+                        setToastTitle("Success");
+                        setToastBody("Venue has been added successfully.");
+                        showToast(3000);
+                    }
+                    else if (data.status == "error") {
+                        setToastTitle("Error");
+                        setToastBody(data.message);
+                        showToast(3000);
+                    }
+                });
+        } else {
+            const href = window.location.href;
+            navigate("/login", { state: { href } });
+        }
 
     }
 

@@ -162,7 +162,7 @@ export default function Venue() {
             
         </div>
 
-        //verification for removing
+            {/*verification for removing*/}
         <Modal show={showRejectModal} onHide={() => setshowRejectModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Are you sure you want to reject?</Modal.Title>
@@ -180,7 +180,7 @@ export default function Venue() {
                 </Modal.Footer>
             </Modal>
 
-        //verification for accepting
+            {/*verification for accepting*/}
 
             <Modal show={showAcceptModal} onHide={() => setshowAcceptModal(false)}>
                 <Modal.Header closeButton>
@@ -200,7 +200,7 @@ export default function Venue() {
             </Modal>
 
 
-        //success modal
+            {/*success modal*/}
             <Modal show={showModal} onHide={() => setShowModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>{modalTitle}</Modal.Title>

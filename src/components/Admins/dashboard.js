@@ -5,9 +5,13 @@ import {
 	MDBCard,
 	MDBCardTitle,
 	MDBCardBody,
-	MDBCardHeader
+	MDBCardHeader,
+	MDBCardText
 } from 'mdb-react-ui-kit';
 import { useEffect } from 'react';
+
+import "./dashboard.css";
+
 
 
 
@@ -18,6 +22,7 @@ export default function Dashboard() {
 	const [service, setService] = React.useState(0);
 	const [vendor, setVendor] = React.useState(0);
 	const [customer, setCustomer] = React.useState(0);
+	const [manager, setManager] = React.useState(0);
 
 	useEffect(() => {
 		getUser();
@@ -63,6 +68,14 @@ export default function Dashboard() {
 			.then((data) => {
 				setVendor(data.data);
 			});
+
+		fetch(`http://localhost:5000/getNumberOfManagers`, {
+			method: "GET",
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				setManager(data.data);
+			});
 	};
 
 
@@ -81,14 +94,15 @@ export default function Dashboard() {
 			includeZero: true
 		},
 		data: [{
-			type: "pie", //change type to bar, line, area, pie, etc
+			type: "column", //change type to bar, line, area, pie, etc
 			//indexLabel: "{y}", //Shows y value on all Data Points
 			indexLabelFontColor: "#5A5757",
 			indexLabelPlacement: "outside",
 			dataPoints: [
 				{ label: "Users", y: user },
 				{ label: "Venues", y: venue },
-				{ label: "Services", y: service }
+				{ label: "Services", y: service },
+				{ label: "Managers", y: manager }
 			]
 		}]
 	}
@@ -119,51 +133,113 @@ export default function Dashboard() {
 	return (
 		<div class="mt-3 px-3">
 
-			<div class="row inform-card my-3">
-				<div class="col-lg-2 col-md-6 col-10 mx-auto">
-					<div class="card">
-						<a href="/users">
-							<div class="card-body">
-								<div class="flex d-flex justify-content-center">
-									<i class="fa fa-user icon"></i>
-									<div class="side-text align-items-center ms-3">
-										<span>Users</span>
-										<h5>{user} </h5>
-									</div>
-								</div>
-							</div>
-						</a>
-					</div>
+			<div class="row inform-card my-3 bg-light m-5">
+
+				<div className="flex d-flex justify-content-center mt-5 mb-5">
+					<h3>Users Statistics</h3>
 				</div>
 
-				
-
-				<div class="col-lg-2 col-md-6 col-10 mx-auto ">
-					<div class="flex d-flex justify-content-center">
+				<div class="col-lg-2 col-md-6 col-10 mx-auto dashcard">
+					<a href="/users">
 						<MDBCard background="light" className='mb-3 w-7'>
 							<MDBCardHeader className="flex d-flex justify-content-center">
-								<i class="fa fa-user icon p-1"></i>
+								<i class="fa fa-users icon p-1"></i>
 								Users
 							</MDBCardHeader>
 							<MDBCardBody>
 								<MDBCardTitle className="flex d-flex justify-content-center">{user}</MDBCardTitle>
 							</MDBCardBody>
 						</MDBCard>
-					</div>
+					</a>
 				</div>
-				<div class="col-lg-2 col-md-6 col-10 mx-auto">
-					<div class="card">
-						<div class="card-body">
-							<div class="flex d-flex justify-content-center">
-								<i class="fa fa-door-open icon"></i>
-								<div class="side-text align-items-center ms-3">
-									<span>Check-outs</span>
-									<h5>17253 </h5>
-								</div>
-							</div>
-						</div>
-					</div>
+
+				<div class="col-lg-2 col-md-6 col-10 mx-auto dashcard">
+					<a href="/users">
+						<MDBCard background="light" className='mb-3 w-7'>
+							<MDBCardHeader className="flex d-flex justify-content-center">
+								<i class="fa fa-user icon p-1"></i>
+								Customers
+							</MDBCardHeader>
+							<MDBCardBody>
+								<MDBCardTitle className="flex d-flex justify-content-center">{customer}</MDBCardTitle>
+							</MDBCardBody>
+						</MDBCard>
+					</a>
 				</div>
+
+
+				<div class="col-lg-2 col-md-6 col-10 mx-auto dashcard">
+					<a href="/users">
+						<MDBCard background="light" className='mb-3 w-7'>
+							<MDBCardHeader className="flex d-flex justify-content-center">
+								<i class="fa fa-shop icon p-1"></i>
+								Vendors
+							</MDBCardHeader>
+							<MDBCardBody>
+								<MDBCardTitle className="flex d-flex justify-content-center">{vendor}</MDBCardTitle>
+							</MDBCardBody>
+						</MDBCard>
+					</a>
+				</div>
+
+			</div>
+
+
+			<div class="row inform-card my-3 bg-light m-5">
+
+				<div className="flex d-flex justify-content-center mt-5 mb-5">
+					<h3>Service Statistics</h3>
+				</div>
+
+				<div class="col-lg-2 col-md-6 col-10 mx-auto dashcard">
+					<a href="/venue">
+						<MDBCard background="light" className='mb-3 w-7'>
+							<MDBCardHeader className="flex d-flex justify-content-center">
+								<i class="fa fa-store icon p-1"></i>
+								Venues
+							</MDBCardHeader>
+							<MDBCardBody>
+								<MDBCardTitle className="flex d-flex justify-content-center">{venue}</MDBCardTitle>
+							</MDBCardBody>
+						</MDBCard>
+					</a>
+				</div>
+
+				<div class="col-lg-2 col-md-6 col-10 mx-auto dashcard">
+					<a href="/service">
+						<MDBCard background="light" className='mb-3 w-7'>
+							<MDBCardHeader className="flex d-flex justify-content-center">
+								<i class="fa fa-camera icon p-1"></i>
+								Services
+							</MDBCardHeader>
+							<MDBCardBody>
+								<MDBCardTitle className="flex d-flex justify-content-center">{service}</MDBCardTitle>
+							</MDBCardBody>
+						</MDBCard>
+					</a>
+				</div>
+
+				<div class="col-lg-2 col-md-6 col-10 mx-auto dashcard">
+					<a href="/service">
+						<MDBCard background="light" className='mb-3 w-7'>
+							<MDBCardHeader className="flex d-flex justify-content-center">
+								<i class="fa-solid fa-user-tie p-1"></i>
+								Manager Created
+							</MDBCardHeader>
+							<MDBCardBody>
+								<MDBCardTitle className="flex d-flex justify-content-center">{manager}</MDBCardTitle>
+							</MDBCardBody>
+						</MDBCard>
+					</a>
+				</div>
+
+			</div>
+
+			<div class="row inform-card my-3 bg-light mt-5 mb-5 ">
+				<div class="col-sm-12 col-md-12 col-lg-6 mt-5 ">
+					<CanvasJSChart options={options}/>
+				</div>
+				
 			</div>
 		</div>
 

@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import './adminPanel.css';
 import { FaBars, FaTimes } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import Nav from 'react-bootstrap/Nav';
 
 function App() {
     const [isOpen, setIsOpen] = useState(false);
@@ -28,13 +30,31 @@ function App() {
                 
             </div>
             <div className={`sidenav-content ${isOpen ? 'open' : ''}`}>
-                <a href="/">Dashboard</a>
-                <a href="/addAdmin">Add new admin</a>
-                <a href="/venue">Venue</a>
-                <a href="/AcceptVendor">Add Vendor</a>
-                <a href="/users">Users</a>
-                <a href ="" onClick={logout}>Logout</a>
-
+                <Link to="/">
+                        Dashboard
+                </Link>
+                <Link to="/addAdmin">
+                    Add new admin
+                </Link>
+                <Link to="/venue">
+                    Venue
+                </Link>
+                <Link to="/service">
+                    Service
+                </Link>
+                <Link to="/AcceptVendor">
+                    Add Vendor
+                </Link>
+                <Link to="/users">
+                    Users
+                </Link>
+                <Link to="/bookings">
+                    Bookings
+                </Link>
+                <Link to=""
+                    onClick={logout}>
+                    Logout
+                </Link>
             </div>
 
             

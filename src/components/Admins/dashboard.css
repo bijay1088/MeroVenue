@@ -1,3 +1,7 @@
-.card{
-    width:250px
+.dashcard{
+    width:250px;
 }
+
+    .dashcard:hover {
+        transform: scale(1.2);
+    }

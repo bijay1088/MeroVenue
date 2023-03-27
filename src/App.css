@@ -62,7 +62,21 @@ label {
     position: fixed;
     bottom: 30px;
     right: 20px;
+    border-radius: 50% !important;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+.IconContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+}
+
 .button-end {
     align-items: flex-end;
 }

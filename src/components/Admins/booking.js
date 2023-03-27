@@ -4,41 +4,30 @@ import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-export default function Users() {
+export default function Booking() {
 
-    const [users, setUsers] = useState([]);
+    const [bookings, setBookings] = useState([]);
     let [showDeleteModal, setshowDeleteModal] = useState(false);
     let [showModal, setShowModal] = useState(false);
     let [modalID, setModalID] = useState("");
     let [modalName, setModalName] = useState("");
     let [modalTitle, setModalTitle] = useState("");
     let [modalBody, setModalBody] = useState("");
-    let [ showbanModal, setshowBanModal ] = useState(false);
-    let [ showunbanModal, setshowUnbanModal ] = useState(false);
+    let [showbanModal, setshowBanModal] = useState(false);
+    let [showunbanModal, setshowUnbanModal] = useState(false);
 
 
     useEffect(() => {
-        getUsers();
+        getBookings();
     }, []);
 
-    const getUsers = () => {
-
-        fetch('http://localhost:5000/getAllUsers', {
-            method: "POST",
-            crossDomain: true,
-            headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-                "Access-Control-Allow-Origin": "*"
-            },
-            body: JSON.stringify({
-                token: window.localStorage.getItem("token"),
-            }),
+    const getBookings = () => {
+        fetch(`http://localhost:5000/getBookings`, {
+            method: "GET",
         })
             .then((res) => res.json())
             .then((data) => {
-                console.log(data);
-                setUsers(data.data);
+                setBookings(data.data);
             });
 
     };
@@ -60,7 +49,7 @@ export default function Users() {
         setModalID(id);
         setModalName(name);
         setshowUnbanModal(true);
-        };
+    };
 
     const deleteUser = (id, name) => {
         setshowDeleteModal(false)
@@ -91,7 +80,7 @@ export default function Users() {
                     setModalBody(data.message);
                     setShowModal(true);
                 }
-                getUsers();
+                getBookings();
             });
 
 
@@ -125,10 +114,17 @@ export default function Users() {
                     setModalBody(data.message);
                     setShowModal(true);
                 }
-                getUsers();
+                getBookings();
             });
     };
 
+    const acceptModal = () => {
+
+    }
+
+    const rejectModal = () => {
+
+    }
 
     const unbanUser = (id, name) => {
         setshowUnbanModal(false)
@@ -158,7 +154,7 @@ export default function Users() {
                     setModalBody(data.message);
                     setShowModal(true);
                 }
-                getUsers();
+                getBookings();
             });
     };
 
@@ -170,45 +166,35 @@ export default function Users() {
                     <Table responsive>
                         <thead>
                             <tr>
-                                <th colSpan={6}><h3>Users</h3></th>
+                                <th colSpan={6}><h3>Booking</h3></th>
                             </tr>
                             <tr>
                                 <th>#</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Created At</th>
-                                <th>Created Time</th>
-                                <th>Banned Status</th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
+                                <th>Customer Name</th>
+                                <th>Venue Name</th>
+                                <th>Service Name</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {users.map((i, index) => {
+                            {bookings.map((i, index) => {
                                 return (
                                     <tr>
-                                        <td>{index+1}</td>
-                                        <td>{i.fname}</td>
-                                        <td>{i.email}</td>
-                                        <td>{i.role}</td>
-                                        <td>{new Date(i.createdAt).toLocaleDateString()}</td>
-                                        <td>{new Date(i.createdAt).toLocaleTimeString()}</td>
-                                        <td>{i.banStatus ? "Banned" : "Not Banned"}</td>
-                                        {i.role != "Admin" ? 
+                                        <td>{index + 1}</td>
+                                        <td>{i.customerName}</td>
+                                        <td>{i.venueName}</td>
+                                        <td>{i.serviceName}</td>
+                                        <td>{new Date(i.date).toLocaleDateString()}</td>
+                                        <td>{i.time}</td>
+                                        <td>{i.status}</td>
+                                        {i.status == "Pending" ?
                                             <>
-                                                {i.banStatus ?
-                                                    <td><button className="btn btn-primary" onClick={() => unbanModal(i._id, i.fname)}>UnBan</button></td>
-                                                    :
-                                                    <td><button className="btn btn-primary" onClick={() => banModal(i._id, i.fname)}>Ban</button></td>
-                                                }
-                                                <td><button className="btn btn-danger" onClick={() => deleteModal(i._id, i.fname)}>Delete</button></td>
+                                                <td><button className="btn btn-primary" onClick={() => acceptModal()}>Accept</button></td>
+                                                <td><button className="btn btn-danger" onClick={() => rejectModal()}>Reject</button></td>
                                             </>
-                                       : null }
-                                        
-                                        
-                                        
+                                        : null}
                                     </tr>
                                 )
                             })}
@@ -252,9 +238,9 @@ export default function Users() {
                         Ban
                     </Button>
                 </Modal.Footer>
-            </Modal> 
+            </Modal>
 
-            {/*unbanninng  users*/}
+            {/*unbanninng  bookings*/}
             <Modal show={showunbanModal} onHide={() => setshowUnbanModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Are you sure you want to unban?</Modal.Title>
@@ -270,7 +256,7 @@ export default function Users() {
                         UnBan
                     </Button>
                 </Modal.Footer>
-                </Modal>
+            </Modal>
 
 
             {/*success modal*/}

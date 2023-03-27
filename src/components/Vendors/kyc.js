@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
-import {Link } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { Toast } from 'react-bootstrap';
 
 export default function KYCForm() {
 
@@ -17,6 +18,10 @@ export default function KYCForm() {
     const [documentImage, setDocumentImage] = useState("");
     const [tos, setTos] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [show, setShow] = useState(false);
+    const [timer, setTimer] = useState(null);
+    const [toastTitle, setToastTitle] = useState("");
+    const [toastBody, setToastBody] = useState("");
 
     useEffect(() => {
         fetch("http://localhost:5000/user", {
@@ -35,11 +40,16 @@ export default function KYCForm() {
             .then((data) => {
                 if (data && data.data) { // check if data and data.data are not undefined
                     setUserId(data.data._id);
-                    setName(data.data.name);
+                    setName(data.data.fname);
                     setEmail(data.data.email);
                 }
             });
     }, []);
+
+    const showToast = (message, duration) => {
+        setShow(true);
+        setTimer(setTimeout(() => setShow(false), duration));
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -97,6 +107,10 @@ export default function KYCForm() {
                 console.log(data);
                 if (data.status == 'success') {
                     setError('');
+                    setToastTitle("Submission Successful");
+                    setToastBody("Your KYC data has been sent successfully.");
+                    showToast(toastBody, 3000);
+
                 } else {
                     setError(data.message);
                 }
@@ -197,7 +211,8 @@ export default function KYCForm() {
                             className="form-check-input"
                             value={tos}
                             checked={tos}
-                            onChange={(e) => setTos(e.target.checked)} />
+                            onChange={(e) => setTos(e.target.checked)}
+                            disabled/>
                         <label>
                                 I agree to the&nbsp;
                                 <span
@@ -240,7 +255,20 @@ export default function KYCForm() {
                 {tos ? "I Disagree" : "I Agree"}
             </Button>
         </Modal.Footer>
-    </Modal>
+            </Modal>
+
+
+            <Toast
+                show={show}
+                onClose={() => setShow(false)}
+                className="position-fixed top-0 end-0 mt-2 me-2"
+                animation={true}
+            >
+                <Toast.Header>
+                    <strong className="me-auto">{toastTitle}</strong>
+                </Toast.Header>
+                <Toast.Body>{toastBody}</Toast.Body>
+            </Toast>
         </>
     )
 }

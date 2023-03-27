@@ -21,7 +21,9 @@ import AdminBar from "./components/Admins/adminPanel"
 import Admin from "./components/Admins/admin"
 import Venue from "./components/Admins/venue"
 import Users from "./components/Admins/users"
+import Service from "./components/Admins/service"
 import AcceptVendor from "./components/Admins/acceptVendor"
+import Booking from "./components/Admins/booking"
 
 import AddVenue from "./components/Vendors/Add_venues"
 import NotVerified from "./components/Vendors/notVerified"
@@ -50,8 +52,10 @@ function App() {
                             <Route path="/" element={<Dashboard/>} />
                             <Route path="/addAdmin" element={<Admin />} />
                             <Route path="/venue" element={<Venue />} />
+                            <Route path="/service" element={<Service />} />
                             <Route path="/acceptVendor" element={<AcceptVendor />} />
                             <Route path="/users" element={<Users />} />
+                            <Route path="/bookings" element={<Booking />} />
                             
                         </>
                     )}
