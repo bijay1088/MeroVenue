@@ -23,12 +23,40 @@ export default function Dashboard() {
 	const [vendor, setVendor] = React.useState(0);
 	const [customer, setCustomer] = React.useState(0);
 	const [manager, setManager] = React.useState(0);
+	const [booking, setBooking] = React.useState(0);
+	const [pending, setPending] = React.useState(0);
+	const [bookingdata, setBookingData] = React.useState([]);
 
 	useEffect(() => {
 		getUser();
 	}, [service]);
 
 	function getUser() {
+
+		fetch(`http://localhost:5000/getNumberOfBookings`, {
+			method: "GET",
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				setBooking(data.data);
+			});
+
+		fetch(`http://localhost:5000/getTopBookings`, {
+			method: "GET",
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				setBookingData(data.data);
+			});
+
+		fetch(`http://localhost:5000/getNumberOfPendingBookings`, {
+			method: "GET",
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				setPending(data.data);
+			});
+
 		fetch(`http://localhost:5000/getNumberOfUsers`, {
 			method: "GET",
 		})
@@ -102,7 +130,9 @@ export default function Dashboard() {
 				{ label: "Users", y: user },
 				{ label: "Venues", y: venue },
 				{ label: "Services", y: service },
-				{ label: "Managers", y: manager }
+				{ label: "Managers", y: manager },
+				{ label: "Bookings", y: booking },
+				{ label: "Pending Bookings", y: pending }
 			]
 		}]
 	}
@@ -123,8 +153,8 @@ export default function Dashboard() {
 			indexLabelFontColor: "#5A5757",
 			indexLabelPlacement: "outside",
 			dataPoints: [
-				{ label: "Customers", y: customer },
-				{ label: "Vendors", y: vendor }
+				{ label: "Bookings", y: booking },
+				{ label: "Pending Bookings", y: pending }
 			]
 		}]
 	}
@@ -233,14 +263,71 @@ export default function Dashboard() {
 					</a>
 				</div>
 
+				<div class="col-lg-2 col-md-6 col-10 mx-auto dashcard">
+					<a href="/bookings">
+						<MDBCard background="light" className='mb-3 w-7'>
+							<MDBCardHeader className="flex d-flex justify-content-center">
+								<i class="fa-solid fa-user-tie p-1"></i>
+								Bookings
+							</MDBCardHeader>
+							<MDBCardBody>
+								<MDBCardTitle className="flex d-flex justify-content-center">{booking}</MDBCardTitle>
+							</MDBCardBody>
+						</MDBCard>
+					</a>
+				</div>
+
 			</div>
 
 			<div class="row inform-card my-3 bg-light mt-5 mb-5 ">
-				<div class="col-sm-12 col-md-12 col-lg-6 mt-5 ">
+				<div class="col-sm-12 col-md-12 col-lg-9 mt-5 ">
 					<CanvasJSChart options={options}/>
+				</div>
+
+
+				<div class="col-sm-12 col-md-9 col-lg-3 mt-5 ">
+					<div class="card">
+						<div class="card-header py-2 d-flex justify-content-between align-items-center card-header-text">
+							<h4 class="card-title">Pending Bookings</h4>
+							<div>
+								<a class="page-link" href="/pendingbookings"><i class="fa fa-arrow-right"></i></a>
+							</div>
+						</div>
+						<div class="card-content">
+							{bookingdata.length > 0 ? (
+								<>
+									{bookingdata.map((i, index) => (
+										<div class="py-1 d-flex align-items-center border-bottom" key={index}>
+											<div class="d-flex align-items-center">
+												<div class="d-flex flex-column ps-3">
+													<h6 class="mb-0">{i.customerEmail}</h6>
+													<div class="time-block text-truncate">
+														<i class="fa fa-clock"></i> <span class="ms-1">{new Date(i.date).toLocaleDateString()}</span>
+														<span class="ms-1"> {i.time} </span>
+													</div>
+												</div>
+											</div>
+										</div>
+									))}
+								</>
+							) : (
+								<div class="py-1 d-flex align-items-center border-bottom">
+									<div class="d-flex align-items-center">
+										<div class="d-flex flex-column ps-3">
+											<h6 class="mb-0">No Pending Bookings</h6>
+											<div class="time-block text-truncate">
+												<span class="ms-1">You have no pending bookings left to verify.</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							)}
+						</div>
+					</div>
 				</div>
 				
 			</div>
+
 		</div>
 
 

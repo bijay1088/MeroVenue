@@ -1,14 +1,11 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
-import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
+import { useEffect, useState } from 'react';
+import moment from 'moment';
 import Modal from 'react-bootstrap/Modal';
-import DataTable from 'react-data-table-component';
-import SearchBox from 'react-search-box';
 import { Toast } from 'react-bootstrap';
 
-export default function Booking() {
-
+export default function HeaderAndFooterExample() {
     const [bookings, setBookings] = useState([]);
     let [modalID, setModalID] = useState("");
     let [modalName, setModalName] = useState("");
@@ -19,7 +16,6 @@ export default function Booking() {
     const [searchQuery, setSearchQuery] = useState('');
     const [show, setShow] = useState(false);
     const [timer, setTimer] = useState(null);
-
 
     useEffect(() => {
         getBookings();
@@ -35,7 +31,6 @@ export default function Booking() {
             });
 
     };
-
 
     const showToast = (duration) => {
         setShow(true);
@@ -54,73 +49,6 @@ export default function Booking() {
         setModalName(name);
         setshowRejectModal(true);
     }
-
-
-    const columns = [
-        {
-            name: '#',
-            selector: (row, index) => index + 1,
-            width: '50px'
-        },
-        {
-            name: 'Customer Name',
-            selector: 'customerName',
-            sortable: true
-        },
-        {
-            name: 'Venue Name',
-            selector: 'venueName',
-            sortable: true
-        },
-        {
-            name: 'Service Name',
-            selector: 'serviceName',
-            sortable: true
-        },
-        {
-            name: 'Date',
-            selector: (row) => new Date(row.date).toLocaleDateString(),
-            sortable: true
-        },
-        {
-            name: 'Time',
-            selector: 'time',
-            sortable: true
-        },
-        {
-            name: 'Status',
-            selector: 'status',
-            sortable: true
-        },
-        {
-            name: 'Actions',
-            cell: row => (
-                <div>
-                    {row.status === "Pending" &&
-                        <>
-                            <button className="btn btn-primary my-1" onClick={() => acceptModal(row._id, row.customerName)}>Accept</button>
-                            <button className="btn btn-danger my-1" onClick={() => rejectModal(row._id, row.customerName)}>Reject</button>
-                        </>
-                    }
-                </div>
-            ),
-            ignoreRowClick: true,
-            allowOverflow: true,
-            button: true
-        }
-    ];
-
-    const filteredData = bookings.filter(
-        (item) =>
-            item.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            item.venueName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            item.serviceName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            item.status.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
-    const handleSearch = (query) => {
-        setSearchQuery(query);
-    };
 
     const acceptBooking = (id) => {
         setshowAcceptModal(false);
@@ -184,31 +112,81 @@ export default function Booking() {
                 }
                 getBookings();
             });
+
+    }
+
+    function renderCard(i) {
+        return (
+            <>
+                {i.status == "Pending"
+                    ?
+                    <Card className="text-center my-5">
+                        <Card.Header>Pending</Card.Header>
+                        <Card.Body>
+                            <Card.Title>{i.customerName}</Card.Title>
+                            <Card.Text>
+                                Customer Email: {i.customerEmail}<br />
+                                Customer Number: {i.customerNumber} <br />
+                                {i.venueEmail ?
+                                    <>
+                                        Venue Name: {i.venueName} <br />
+                                        Venue Number: {i.venueNumber}<br />
+                                        Venue Email: {i.venueEmail}<br />
+                                    </>
+                                    :
+                                    null
+                                }
+                                {i.serviceEmail ?
+                                    <>
+                                        Service Name: {i.serviceName}<br />
+                                        Service Number: {i.serviceNumber}<br />
+                                        Service Email: {i.serviceEmail}<br />
+                                    </>
+                                    :
+                                    null
+                                }
+                                Date: {new Date(i.date).toLocaleDateString()}<br />
+                                Time: {i.time}<br />
+
+
+                            </Card.Text>
+                            <Button variant="primary" onClick={() => acceptModal(i._id, i.customerName)}>Accept</Button> &nbsp;&nbsp;
+                            <Button variant="danger" onClick={() => rejectModal(i._id, i.customerName)}>Reject</Button>
+                        </Card.Body>
+                        <Card.Footer className="text-muted">{moment(i.createdAt).fromNow()}</Card.Footer>
+                    </Card>
+                    :
+                    null
+                }
+            </>
+        );
     }
 
     return (
         <>
-            <div className="d-flex justify-content-center my-2">
-                <h2>Users</h2>
+            <div class="mt-3 px-3 d-flex justify-content-center" >
+                <div class="flex row inform-card my-3 m-5 col-sm-12 col-md-12 col-lg-6">
+                    {bookings.length>0 ?
+                        <>
+                            {bookings.map((i, index) => {
+                                return renderCard(i);
+                            })}
+                        </>
+                        :
+                        <Card className="text-center my-5">
+                            <Card.Header>No data</Card.Header>
+                            <Card.Body>
+                                <Card.Title>Nothing to show here</Card.Title>
+                                <Card.Text>
+                                    You have no pending bookings left to verify.
+                                </Card.Text>
+                            </Card.Body>
+                            <Card.Footer className="text-muted">Nothing here</Card.Footer>
+                        </Card>
+                    }
 
-            </div>
-            <div className="container" style={{ height: "100vh" }}>
-                <div className="row justify-content-center">
-                    <div className="col-12 col-md-10 col-lg-12">
-                        <div className="my-2 col-lg-6 d-flex justify-content-center">
-                            <SearchBox placeholder="Search..." onChange={handleSearch} />
-                        </div>
-                        <div className="table-responsive">
-                            <DataTable
-                                columns={columns}
-                                data={filteredData}
-                                pagination={true}
-                                highlightOnHover={true}
-                                striped={true}
-                            />
-                        </div>
-                    </div>
                 </div>
+            
             </div>
 
             {/*verification for rejecting*/}
@@ -261,10 +239,6 @@ export default function Booking() {
                 <Toast.Body>{modalBody}</Toast.Body>
             </Toast>
 
-
-
         </>
-
-    )
-
+    );
 }

@@ -51,6 +51,9 @@ function App() {
                 <Link to="/bookings">
                     Bookings
                 </Link>
+                <Link to="/pendingbookings">
+                    Pending Bookings
+                </Link>
                 <Link to=""
                     onClick={logout}>
                     Logout

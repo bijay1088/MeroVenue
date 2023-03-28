@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import DataTable from 'react-data-table-component';
+import SearchBox from 'react-search-box';
 
 export default function Service() {
 
@@ -14,6 +16,7 @@ export default function Service() {
     let [modalName, setModalName] = useState("");
     let [modalTitle, setModalTitle] = useState("");
     let [modalBody, setModalBody] = useState("");
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         getService();
@@ -82,45 +85,88 @@ export default function Service() {
 
     };
 
+    const columns = [
+        {
+            name: '#',
+            selector: (row, index) => index + 1,
+            width: '50px'
+        },
+        {
+            name: 'Service Name',
+            selector: 'serviceName',
+            sortable: true
+        },
+        {
+            name: 'Type',
+            selector: 'serviceType',
+            sortable: true
+        },
+        {
+            name: 'Address',
+            selector: 'location',
+            sortable: true
+        },
+        {
+            name: 'Email',
+            selector: 'email',
+            sortable: true
+        },
+        {
+            name: 'Phone Number',
+            selector: 'contactInfo',
+            sortable: true
+        },
+        {
+            name: 'Created At',
+            selector: 'createdAt',
+            sortable: true,
+            format: row => new Date(row.createdAt).toLocaleDateString()
+        },
+        {
+            name: 'Created Time',
+            selector: 'createdAt',
+            sortable: true,
+            format: row => new Date(row.createdAt).toLocaleTimeString()
+        }
+    ];
+
+    const filteredData = Service.filter(
+        (item) =>
+            item.serviceName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.serviceType.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.location.toLowerCase().includes(searchQuery.toLowerCase()) || 
+            item.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.contactInfo.includes(searchQuery)
+    );
+
+    const handleSearch = (query) => {
+        setSearchQuery(query);
+    };
+
+
     return (
         <>
-            <div style={{ display: 'flex', justifyContent: 'center', height: '100vh' }}>
-                <div>
-                    <Table responsive>
-                        <thead>
-                            <tr>
-                                <th colSpan={6}><h3>Services</h3></th>
-                            </tr>
-                            <tr>
-                                <th>#</th>
-                                <th>Service Name</th>
-                                <th>Type</th>
-                                <th>Address</th>
-                                <th>Email</th>
-                                <th>Phone Number</th>
-                                <th>Created At</th>
-                                <th>Created Time</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {Service.map((i, index) => {
-                                return (
-                                    <tr>
-                                        <td>{index + 1}</td>
-                                        <td>{i.serviceName}</td>
-                                        <td>{i.serviceType}</td>
-                                        <td>{i.location}</td>
-                                        <td>{i.email}</td>
-                                        <td>{i.contactInfo}</td>
-                                        <td>{new Date(i.createdAt).toLocaleDateString()}</td>
-                                        <td>{new Date(i.createdAt).toLocaleTimeString()}</td>
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
-                    </Table>
-                </div>
+            <div className="d-flex justify-content-center my-2">
+                <h2>Services</h2>
 
+            </div>
+            <div className="container" style={{ height: "100vh" }}>
+                <div className="row justify-content-center">
+                    <div className="col-12 col-md-10 col-lg-12">
+                        <div className="my-2 col-lg-6 d-flex justify-content-center">
+                            <SearchBox placeholder="Search..." onChange={handleSearch} />
+                        </div>
+                        <div className="table-responsive">
+                            <DataTable
+                                columns={columns}
+                                data={filteredData}
+                                pagination={true}
+                                highlightOnHover={true}
+                                striped={true}
+                            />
+                        </div>
+                    </div>
+                </div>
             </div>
 
             {/*verification for removing*/}

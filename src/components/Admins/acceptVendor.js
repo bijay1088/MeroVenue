@@ -5,7 +5,9 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Toast} from 'react-bootstrap';
+import { Toast } from 'react-bootstrap';
+import DataTable from 'react-data-table-component';
+import SearchBox from 'react-search-box';
 
 export default function Vendor() {
 
@@ -22,6 +24,7 @@ export default function Vendor() {
     const [modalName, setModalName] = useState("");
     const [modalTitle, setModalTitle] = useState("");
     const [modalBody, setModalBody] = useState("");
+    const [searchQuery, setSearchQuery] = useState('');
 
     const [show, setShow] = useState(false);
     const [timer, setTimer] = useState(null);
@@ -176,61 +179,119 @@ export default function Vendor() {
         }
     };
 
+    const columns = [
+        {
+            name: '#',
+            selector: (row, index) => index + 1,
+            width: '50px'
+        },
+        {
+            name: 'Vendor Name',
+            selector: 'fname',
+            sortable: true
+        },
+        {
+            name: 'Email',
+            selector: 'email',
+            sortable: true
+        },
+        {
+            name: 'Verified',
+            selector: 'verified',
+            sortable: true,
+            cell: row => row.verified ? 'True' : 'False'
+        },
+        {
+            name: 'Created At',
+            selector: 'createdAt',
+            sortable: true,
+            format: row => new Date(row.createdAt).toLocaleDateString()
+        },
+        {
+            name: 'Created Time',
+            selector: 'createdAt',
+            sortable: true,
+            format: row => new Date(row.createdAt).toLocaleTimeString()
+        },
+        {
+            name: 'Details',
+            cell: row => (
+                <FontAwesomeIcon
+                    icon={faEye}
+                    onClick={() => { kycModal(row._id, row.verified, row.fname) }}
+                    style={{ cursor: 'pointer' }}
+                />
+            ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            button: true
+        },
+        //{
+        //    name: 'Accept',
+        //    cell: row => (
+        //        <>
+        //            {!row.verified && (
+        //                <button className="btn btn-success" onClick={() => acceptModal(row._id, row.fname)}>Accept</button>
+        //            )}
+        //        </>
+        //    ),
+        //    ignoreRowClick: true,
+        //    allowOverflow: true,
+        //    button: true
+        //},
+        //{
+        //    name: 'Reject',
+        //    cell: row => (
+        //        <>
+        //            {!row.verified && (
+        //                <button className="btn btn-danger" onClick={() => rejectModal(row._id, row.fname)}>Reject</button>
+        //            )}
+        //        </>
+        //    ),
+        //    ignoreRowClick: true,
+        //    allowOverflow: true,
+        //    button: true
+        //}
+    ];
+
+    const filteredData = vendor.filter(
+        (item) =>
+            item.fname.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.role.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const handleSearch = (query) => {
+        setSearchQuery(query);
+    };
+
 
 
 
 
     return (
         <>
-            <div style={{ display: 'flex', justifyContent: 'center', height: '100vh', textAlign: 'center' }}>
-                <div>
-                    <Table responsive>
-                        <thead>
-                            <tr>
-                                <th colSpan={9}><h3>Accept Vendor</h3></th>
-                            </tr>
-                            <tr>
-                                <th>#</th>
-                                <th>Vendor Name</th>
-                                <th>Email</th>
-                                <th>Verified</th>
-                                <th>Created At</th>
-                                <th>Created Time</th>
-                                <th>Details</th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {vendor.map((i, index) => {
-                                return (
-                                    <tr>
-                                        <td>{index + 1}</td>
-                                        <td>{i.fname}</td>
-                                        <td>{i.email}</td>
-                                        <td>{i.verified ? "True" : "False"}</td>
-                                        <td>{new Date(i.createdAt).toLocaleDateString()}</td>
-                                        <td>{new Date(i.createdAt).toLocaleTimeString()}</td>
-                                        <td>
-                                            <FontAwesomeIcon
-                                                icon={faEye}
-                                                onClick={() => { kycModal(i._id, i.verified, i.fname) }}
-                                                style={{ cursor: 'pointer'} }
-                                            />
-                                        </td>
-                                        {/*{i.verified ?*/}
-                                        {/*    <td><button className="btn btn-danger" onClick={() => rejectModal(i._id, i.fname)}>Reject</button></td>*/}
-                                        {/*    :*/}
-                                        {/*    <td><button className="btn btn-success" onClick={() => acceptModal(i._id, i.fname)}>Accept</button></td>*/}
-                                        {/*}*/}
+            <div className="d-flex justify-content-center my-2">
+                <h2>Accept Vendors</h2>
 
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
-                    </Table>
+            </div>
+            <div className="container" style={{ height: "100vh" }}>
+                <div className="row justify-content-center">
+                    <div className="col-12 col-md-10 col-lg-12">
+                        <div className="my-2 col-lg-6 d-flex justify-content-center">
+                            <SearchBox placeholder="Search..." onChange={handleSearch} />
+                        </div>
+                        <div className="table-responsive">
+                            <DataTable
+                                columns={columns}
+                                data={filteredData}
+                                pagination={true}
+                                highlightOnHover={true}
+                                striped={true}
+                            />
+                        </div>
+                    </div>
                 </div>
-
             </div>
 
             {/*verification for removing*/}
@@ -309,7 +370,7 @@ export default function Vendor() {
                             <p>No KYC details found</p>
                         ):(
                             <p>
-                                Contact Number: {kyc[0].vendorID}
+                                Contact Number: {kyc[0].contactNumber}
                                 <br /><br />
                                 Address: {kyc[0].address}
                                 <br /><br />

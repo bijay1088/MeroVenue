@@ -140,10 +140,45 @@ function ServiceDetail(props) {
     function showModal() {
         const loggedIn = window.localStorage.getItem('loggedIn');
         if (loggedIn) {
-            setshowBookModal(true);
+            fetch("http://localhost:5000/getUserPhoneNumber", {
+                method: "POST",
+                crossDomain: true,
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                    "Access-Control-Allow-Origin": "*"
+                },
+                body: JSON.stringify({
+                    token: window.localStorage.getItem("token")
+                }),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.status == "success") {
+                        console.log(data.data);
+                        if (data.data == undefined || data.data == "") {
+                            setNumber("");
+                            setNoNumber(true);
+                        }
+                        else {
+                            setNoNumber(false);
+                            setNumber(data.data);
+                        }
+
+                        setshowBookModal(true);
+                    }
+                    else if (data.status == "error") {
+                        console.log(data.data);
+                        setToastTitle("Error");
+                        setToastBody(data.message);
+                        showToast(3000);
+                    }
+                });
+
         } else {
             const href = window.location.href;
             navigate("/login", { state: { href } });
+            window.location.reload();
         }
     }
 

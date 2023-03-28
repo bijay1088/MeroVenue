@@ -24,6 +24,7 @@ import Users from "./components/Admins/users"
 import Service from "./components/Admins/service"
 import AcceptVendor from "./components/Admins/acceptVendor"
 import Booking from "./components/Admins/booking"
+import PendingBooking from "./components/Admins/pendingBooking"
 
 import AddVenue from "./components/Vendors/Add_venues"
 import NotVerified from "./components/Vendors/notVerified"
@@ -56,6 +57,7 @@ function App() {
                             <Route path="/acceptVendor" element={<AcceptVendor />} />
                             <Route path="/users" element={<Users />} />
                             <Route path="/bookings" element={<Booking />} />
+                            <Route path="/pendingBookings" element={<PendingBooking />} />
                             
                         </>
                     )}

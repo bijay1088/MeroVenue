@@ -185,6 +185,7 @@ function VenueDetail(props) {
         } else {
             const href = window.location.href;
             navigate("/login", { state: { href } });
+            window.location.reload();
         }
     }
 

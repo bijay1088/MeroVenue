@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import DataTable from 'react-data-table-component';
+import SearchBox from 'react-search-box';
 
 export default function Users() {
 
@@ -14,7 +16,8 @@ export default function Users() {
     let [modalTitle, setModalTitle] = useState("");
     let [modalBody, setModalBody] = useState("");
     let [ showbanModal, setshowBanModal ] = useState(false);
-    let [ showunbanModal, setshowUnbanModal ] = useState(false);
+    let [showunbanModal, setshowUnbanModal] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
 
 
     useEffect(() => {
@@ -162,60 +165,98 @@ export default function Users() {
             });
     };
 
+    const columns = [
+        {
+            name: '#',
+            selector: (row, index) => index + 1,
+            width: '50px'
+        },
+        {
+            name: 'Name',
+            selector: 'fname',
+            sortable: true
+        },
+        {
+            name: 'Email',
+            selector: 'email',
+            sortable: true
+        },
+        {
+            name: 'Role',
+            selector: 'role',
+            sortable: true
+        },
+        {
+            name: 'Created At',
+            selector: 'createdAt',
+            sortable: true,
+            format: row => new Date(row.createdAt).toLocaleDateString()
+        },
+        {
+            name: 'Created Time',
+            selector: 'createdAt',
+            sortable: true,
+            format: row => new Date(row.createdAt).toLocaleTimeString()
+        },
+        {
+            name: 'Banned Status',
+            selector: 'banStatus',
+            sortable: true,
+            format: row => row.banStatus ? 'Banned' : 'Not Banned'
+        },
+        {
+            cell: row => row.role !== 'Admin' && (
+                row.banStatus ? (
+                    <button className="btn btn-primary" onClick={() => unbanModal(row._id, row.fname)}>UnBan</button>
+                ) : (
+                    <button className="btn btn-primary" onClick={() => banModal(row._id, row.fname)}>Ban</button>
+                )
+            )
+        },
+        {
+            cell: row => row.role !== 'Admin' && (
+                <button className="btn btn-danger" onClick={() => deleteModal(row._id, row.fname)}>Delete</button>
+            )
+        }
+    ];
+
+    const filteredData = users.filter(
+        (item) =>
+            item.fname.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.role.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const handleSearch = (query) => {
+        setSearchQuery(query);
+    };
+
+
+
 
     return (
         <>
-            <div style={{ display: 'flex', justifyContent: 'center', height: '100vh' }}>
-                <div>
-                    <Table responsive>
-                        <thead>
-                            <tr>
-                                <th colSpan={6}><h3>Users</h3></th>
-                            </tr>
-                            <tr>
-                                <th>#</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Created At</th>
-                                <th>Created Time</th>
-                                <th>Banned Status</th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {users.map((i, index) => {
-                                return (
-                                    <tr>
-                                        <td>{index+1}</td>
-                                        <td>{i.fname}</td>
-                                        <td>{i.email}</td>
-                                        <td>{i.role}</td>
-                                        <td>{new Date(i.createdAt).toLocaleDateString()}</td>
-                                        <td>{new Date(i.createdAt).toLocaleTimeString()}</td>
-                                        <td>{i.banStatus ? "Banned" : "Not Banned"}</td>
-                                        {i.role != "Admin" ? 
-                                            <>
-                                                {i.banStatus ?
-                                                    <td><button className="btn btn-primary" onClick={() => unbanModal(i._id, i.fname)}>UnBan</button></td>
-                                                    :
-                                                    <td><button className="btn btn-primary" onClick={() => banModal(i._id, i.fname)}>Ban</button></td>
-                                                }
-                                                <td><button className="btn btn-danger" onClick={() => deleteModal(i._id, i.fname)}>Delete</button></td>
-                                            </>
-                                       : null }
-                                        
-                                        
-                                        
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
-                    </Table>
-                </div>
+            <div className="d-flex justify-content-center my-2">
+                <h2>Users</h2>
 
+            </div>
+            <div className="container" style={{ height: "100vh" }}>
+                <div className="row justify-content-center">
+                    <div className="col-12 col-md-10 col-lg-12">
+                        <div className="my-2 col-lg-6 d-flex justify-content-center">
+                            <SearchBox placeholder="Search..." onChange={handleSearch} />
+                        </div>
+                        <div className="table-responsive">
+                            <DataTable
+                                columns={columns}
+                                data={filteredData}
+                                pagination={true}
+                                highlightOnHover={true}
+                                striped={true}
+                            />
+                        </div>
+                    </div>
+                </div>
             </div>
 
             {/*removingUsers*/}
