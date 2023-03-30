@@ -8,36 +8,31 @@ import {
     MDBCol,
     MDBCard,
     MDBCardBody,
-    MDBCardImage,
-    MDBCardTitle,
-    MDBRipple,
     MDBIcon,
     MDBBtn,
-} from "mdb-react-ui-kit";
-import {
     MDBCarousel,
-    MDBCarouselItem,
-} from 'mdb-react-ui-kit';
+    MDBCarouselItem
+} from "mdb-react-ui-kit";
+
 import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
 import './serviceDetail.css';
 import { Toast } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
+import Rating from 'react-rating-stars-component';
+
 
 
 function ServiceDetail(props) {
+    const loggedIn = window.localStorage.getItem('loggedIn');
+    const isVendor = window.localStorage.getItem('isVendor');
     const { id } = useParams();
-    const [service, setVenue] = React.useState({});
-    const [position, setPosition] = React.useState(null);
+    const [service, setService] = React.useState({});
     const mapRef = useRef();
     const navigate = useNavigate();
     const [show, setShow] = useState(false);
     const [timer, setTimer] = useState(null);
     const [toastTitle, setToastTitle] = React.useState("");
     const [toastBody, setToastBody] = React.useState("");
-    const [modalID, setModalID] = useState("");
-    const [modalName, setModalName] = useState("");
-    const [modalTitle, setModalTitle] = useState("");
-    const [modalBody, setModalBody] = useState("");
     const [showBookModal, setshowBookModal] = useState(false);
     const [number, setNumber] = useState("");
     const [date, setDate] = useState("");
@@ -46,8 +41,46 @@ function ServiceDetail(props) {
     const [error, setError] = useState("");
 
     useEffect(() => {
-        getVenue();
+        getService();
     }, []);
+
+    const handleRatingChange = (newRating) => {
+        if (loggedIn) {
+            // You can make a POST request here to save the rating to your database
+            fetch("http://localhost:5000/addRating", {
+                method: "POST",
+                crossDomain: true,
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                    "Access-Control-Allow-Origin": "*"
+                },
+                body: JSON.stringify({
+                    token: window.localStorage.getItem("token"),
+                    venueID: null,
+                    serviceID: id,
+                    rating: newRating
+                }),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.status == "success") {
+                        getService();
+
+                    }
+                    else if (data.status == "error") {
+                        console.log(data.message)
+                    }
+                });
+
+        }
+        else {
+            const href = window.location.href;
+            navigate("/login", { state: { href } });
+            
+        }
+        
+    };
 
     const booknow = () => {
 
@@ -138,7 +171,7 @@ function ServiceDetail(props) {
     };
 
     function showModal() {
-        const loggedIn = window.localStorage.getItem('loggedIn');
+        
         if (loggedIn) {
             fetch("http://localhost:5000/getUserPhoneNumber", {
                 method: "POST",
@@ -178,19 +211,21 @@ function ServiceDetail(props) {
         } else {
             const href = window.location.href;
             navigate("/login", { state: { href } });
-            window.location.reload();
+            
         }
     }
 
-    const getVenue = () => {
+    const getService = () => {
         fetch(`http://localhost:5000/getService/${id}`, {
             method: "GET",
         })
             .then((res) => res.json())
             .then((data) => {
-                setVenue(data.data);
+                setService(data.data);
+                
             });
     };
+
 
     function appPackage() {
         const loggedIn = window.localStorage.getItem('loggedIn');
@@ -277,15 +312,20 @@ function ServiceDetail(props) {
                                         <h1>{service.serviceName}</h1>
                                     </div>
                                     
-                                    <div className="d-flex flex-row mb-3">
-                                        <div className="text-danger mb-1 me-2">
-                                            <MDBIcon fas icon="star" />
-                                            <MDBIcon fas icon="star" />
-                                            <MDBIcon fas icon="star" />
-                                            <MDBIcon fas icon="star" />
+                                        <div className="d-flex flex-row align-items-center mb-3">
+                                            <div className="text-danger mb-1 me-2">
+                                                <Rating
+                                                    count={5}
+                                                    value={service.avgRating}
+                                                    onChange={handleRatingChange}
+                                                    size={30}
+                                                    activeColor="#ffd700"
+                                                />
+                                            </div>
+                                            <span className="my-3">{service.avgRating}</span>
                                         </div>
-                                        <span>310</span>
-                                    </div>
+
+
                                     <div className="d-flex justify-content-start">
                                         <div>
                                             <div className="mb-3">
@@ -330,22 +370,24 @@ function ServiceDetail(props) {
                                         
                                         {service.about }
                                     </div>
-
-                                    <div className="mt-5">
-                                        <MDBBtn
-                                            className="btn btn-inline-primary btn-rounded btn-md"
-                                                onClick={showModal}
-                                            size="md">
-                                            Book Now
-                                        </MDBBtn>
-                                            &nbsp;&nbsp;&nbsp;
-                                        <MDBBtn
-                                            className="btn btn-inline-secondary btn-rounded btn-md"
-                                            size="md"
-                                            onClick={appPackage}                                        >
-                                            Add to Package
-                                        </MDBBtn>
-                                    </div>
+                                        {isVendor ? null : (
+                                            <div className="mt-5">
+                                                <MDBBtn
+                                                    className="btn btn-inline-primary btn-rounded btn-md"
+                                                    onClick={showModal}
+                                                    size="md">
+                                                    Book Now
+                                                </MDBBtn>
+                                                &nbsp;&nbsp;&nbsp;
+                                                <MDBBtn
+                                                    className="btn btn-inline-secondary btn-rounded btn-md"
+                                                    size="md"
+                                                    onClick={appPackage}                                        >
+                                                    Add to Package
+                                                </MDBBtn>
+                                            </div>
+                                        )}
+                                    
 
                                 </MDBCol>
                             </MDBRow>

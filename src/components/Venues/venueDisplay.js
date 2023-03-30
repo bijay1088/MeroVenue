@@ -17,9 +17,10 @@ import "./venueDisplay.css"
 import { useNavigate } from 'react-router-dom';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { Toast } from 'react-bootstrap';
+import Rating from 'react-rating-stars-component';
 
 function VenueDisplay(props) {
-
+    const isVendor = window.localStorage.getItem('isVendor');
     const navigate = useNavigate();
     const [id, setId] = React.useState("");
     const [selectedOption, setSelectedOption] = React.useState(null);
@@ -98,6 +99,7 @@ function VenueDisplay(props) {
         { value: 'Outdoor Event', label: 'Outdoor Event' },
         { value: 'Religious Event', label: 'Religious Event' },
         { value: 'Family Gathering', label: 'Family Gathering' },
+        { value: 'Cafe', label: 'Cafe' },
         { value: 'Other', label: 'Other' }
     ];
 
@@ -169,7 +171,7 @@ function VenueDisplay(props) {
                                                     return true;
                                                 }
                                             }).map((venue, index) => (
-                                            <MDBCard className="shadow-0 border rounded-3 mt-5 mb-3">
+                                                <MDBCard className="shadow-0 border rounded-3 mt-5 mb-3" key={index}>
                                                 <MDBCardBody>
                                                     <MDBRow>
                                                         <MDBCol md="12" lg="3" className="mb-4 mb-lg-0">
@@ -179,8 +181,8 @@ function VenueDisplay(props) {
                                                                 className="bg-image rounded hover-zoom hover-overlay"
                                                             >
                                                                 <MDBCardImage
-                                                                    src={`http://localhost:5000/${venue.image}` }
-                                                                    top
+                                                                        src={`http://localhost:5000/${venue.image}`}
+                                                                        top="true"
                                                                     className="w-100 card-image d-flex justify-content-center align-items-center"
                                                                 />
                                                                 <a onClick={() => openVenuePage(venue)}>
@@ -193,15 +195,18 @@ function VenueDisplay(props) {
                                                         </MDBCol>
                                                         <MDBCol md="6">
                                                             <h5>{venue.venueName}</h5>
-                                                            <div className="d-flex flex-row">
-                                                                <div className="text-danger mb-1 me-2">
-                                                                    <MDBIcon fas icon="star" />
-                                                                    <MDBIcon fas icon="star" />
-                                                                    <MDBIcon fas icon="star" />
-                                                                    <MDBIcon fas icon="star" />
+                                                                <div className="d-flex flex-row align-items-center mb-3">
+                                                                    <div className="text-danger mb-1 me-2">
+                                                                        <Rating
+                                                                            count={5}
+                                                                            value={venue.avgRating}
+                                                                            size={30}
+                                                                            activeColor="#ffd700"
+                                                                            edit={false}
+                                                                        />
+                                                                    </div>
+                                                                    <span className="my-3">{venue.avgRating}</span>
                                                                 </div>
-                                                                <span></span>
-                                                            </div>
                                                             <div className="mb-2 text-muted small">
                                                                 <MDBIcon fas icon="person" />
                                                                 <span>&nbsp; {venue.capacity}</span>
@@ -237,10 +242,13 @@ function VenueDisplay(props) {
                                                             <div className="d-flex flex-column mt-4" >
                                                                 <MDBBtn color="primary" size="sm" onClick={() => openVenuePage(venue)}>
                                                                     Details
-                                                                </MDBBtn>
-                                                                <MDBBtn outline color="primary" size="sm" className="mt-2" onClick={()=> appPackage(venue._id) }>
-                                                                    Add to package
-                                                                </MDBBtn>
+                                                                    </MDBBtn>
+                                                                    {isVendor ? null : (
+                                                                        <MDBBtn outline color="primary" size="sm" className="mt-2" onClick={() => appPackage(venue._id)}>
+                                                                            Add to package
+                                                                        </MDBBtn>
+                                                                    )}
+                                                                
                                                             </div>
                                                         </MDBCol>
                                                     </MDBRow>

@@ -17,10 +17,11 @@ import "./serviceDisplay.css";
 import { useNavigate } from 'react-router-dom';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { Toast } from 'react-bootstrap';
+import Rating from 'react-rating-stars-component';
 
 function ServiceDisplay(props) {
 
-
+    const isVendor = window.localStorage.getItem('isVendor');
     const navigate = useNavigate();
     const [id, setId] = React.useState("");
     const [selectedOption, setSelectedOption] = React.useState(null);
@@ -32,8 +33,8 @@ function ServiceDisplay(props) {
 
     function openServicePage(service) {
         setId(service._id);
-        console.log(service._id);
         navigate(`/serviceDetail/${service._id}`);
+        
     };
 
     const showToast = (duration) => {
@@ -98,6 +99,7 @@ function ServiceDisplay(props) {
         } else {
             const href = window.location.href;
             navigate("/login", { state: { href } });
+            
         }
 
     }
@@ -162,7 +164,7 @@ function ServiceDisplay(props) {
                                                     return true;
                                                 }
                                             }).map((service, index) => (
-                                            <MDBCard className="shadow-0 border rounded-3 mt-5 mb-3">
+                                                <MDBCard className="shadow-0 border rounded-3 mt-5 mb-3" key={index}>
                                                 <MDBCardBody>
                                                     <MDBRow>
                                                         <MDBCol md="12" lg="3" className="mb-4 mb-lg-0">
@@ -185,15 +187,18 @@ function ServiceDisplay(props) {
                                                         </MDBCol>
                                                         <MDBCol md="6">
                                                             <h5>{service.serviceName}</h5>
-                                                            <div className="d-flex flex-row">
-                                                                <div className="text-danger mb-1 me-2">
-                                                                    <MDBIcon fas icon="star" />
-                                                                    <MDBIcon fas icon="star" />
-                                                                    <MDBIcon fas icon="star" />
-                                                                    <MDBIcon fas icon="star" />
+                                                                <div className="d-flex flex-row align-items-center mb-3">
+                                                                    <div className="text-danger mb-1 me-2">
+                                                                        <Rating
+                                                                            count={5}
+                                                                            value={service.avgRating}
+                                                                            size={30}
+                                                                            activeColor="#ffd700"
+                                                                            edit={false}
+                                                                        />
+                                                                    </div>
+                                                                    <span className="my-3">{service.avgRating}</span>
                                                                 </div>
-                                                                <span></span>
-                                                            </div>
                                                             <div className="mb-2 text-muted small">
                                                                 <MDBIcon fas icon="tag" />
                                                                 <span>&nbsp; </span>
@@ -217,10 +222,13 @@ function ServiceDisplay(props) {
                                                             <div className="d-flex flex-column mt-4" >
                                                                 <MDBBtn color="primary" size="sm" onClick={() => openServicePage(service)}>
                                                                     Details
-                                                                </MDBBtn>
-                                                                <MDBBtn outline color="primary" size="sm" className="mt-2" onClick={() => appPackage(service._id)}>
-                                                                    Add to package
-                                                                </MDBBtn>
+                                                                    </MDBBtn>
+                                                                    {isVendor ? null : (
+                                                                        <MDBBtn outline color="primary" size="sm" className="mt-2" onClick={() => appPackage(service._id)}>
+                                                                            Add to package
+                                                                        </MDBBtn>
+                                                                    )}
+                                                                
                                                             </div>
                                                         </MDBCol>
                                                     </MDBRow>

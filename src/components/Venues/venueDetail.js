@@ -19,9 +19,12 @@ import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
 import './venueDetail.css';
 import { Toast } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
+import Rating from 'react-rating-stars-component';
 
 
 function VenueDetail(props) {
+    const loggedIn = window.localStorage.getItem('loggedIn');
+    const isVendor = window.localStorage.getItem('isVendor');
     const { id } = useParams();
     const [venue, setVenue] = React.useState({});
     const [position, setPosition] = React.useState(null);
@@ -45,6 +48,44 @@ function VenueDetail(props) {
     useEffect(() => {
         getVenue();
     }, []);
+
+    const handleRatingChange = (newRating) => {
+        if (loggedIn) {
+            // You can make a POST request here to save the rating to your database
+            fetch("http://localhost:5000/addRating", {
+                method: "POST",
+                crossDomain: true,
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                    "Access-Control-Allow-Origin": "*"
+                },
+                body: JSON.stringify({
+                    token: window.localStorage.getItem("token"),
+                    venueID: null,
+                    serviceID: id,
+                    rating: newRating
+                }),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.status == "success") {
+                        getVenue();
+
+                    }
+                    else if (data.status == "error") {
+                        console.log(data.message)
+                    }
+                });
+
+        }
+        else {
+            const href = window.location.href;
+            navigate("/login", { state: { href } });
+
+        }
+
+    };
 
     const getVenue = () => {
         fetch(`http://localhost:5000/getVenue/${id}`, {
@@ -185,7 +226,7 @@ function VenueDetail(props) {
         } else {
             const href = window.location.href;
             navigate("/login", { state: { href } });
-            window.location.reload();
+            
         }
     }
 
@@ -291,15 +332,19 @@ function VenueDetail(props) {
                                         <h1>{venue.venueName}</h1>
                                     </div>
                                     
-                                    <div className="d-flex flex-row mb-3">
-                                        <div className="text-danger mb-1 me-2">
-                                            <MDBIcon fas icon="star" />
-                                            <MDBIcon fas icon="star" />
-                                            <MDBIcon fas icon="star" />
-                                            <MDBIcon fas icon="star" />
+                                        <div className="d-flex flex-row align-items-center mb-3">
+                                            <div className="text-danger mb-1 me-2">
+                                                <Rating
+                                                    count={5}
+                                                    value={venue.avgRating}
+                                                    onChange={handleRatingChange}
+                                                    size={30}
+                                                    activeColor="#ffd700"
+                                                />
+                                            </div>
+                                            <span className="my-3">{venue.avgRating}</span>
                                         </div>
-                                        <span>310</span>
-                                    </div>
+
                                     <div className="mb-3" size="5">
                                         <strong>Capacity:  </strong>
                                         <MDBIcon fas icon="person" />
@@ -338,23 +383,25 @@ function VenueDetail(props) {
                                         </h4>
                                         
                                         {venue.about }
-                                    </p>
-
-                                    <div className="mt-5">
-                                        <MDBBtn
-                                            className="btn btn-inline-primary btn-rounded btn-md"
-                                            size="md"
-                                            onClick={showModal}                                        >
-                                            Book Now
-                                            </MDBBtn>
-                                            &nbsp;&nbsp;&nbsp;
-                                        <MDBBtn
-                                                className="btn btn-inline-secondary btn-rounded btn-md"
-                                                size="md"
-                                                onClick={appPackage}                                        >
-                                                Add to Package
-                                        </MDBBtn>
-                                    </div>
+                                        </p>
+                                        {isVendor ? null : (
+                                            <div className="mt-5">
+                                                <MDBBtn
+                                                    className="btn btn-inline-primary btn-rounded btn-md"
+                                                    size="md"
+                                                    onClick={showModal}                                        >
+                                                    Book Now
+                                                </MDBBtn>
+                                                &nbsp;&nbsp;&nbsp;
+                                                <MDBBtn
+                                                    className="btn btn-inline-secondary btn-rounded btn-md"
+                                                    size="md"
+                                                    onClick={appPackage}                                        >
+                                                    Add to Package
+                                                </MDBBtn>
+                                            </div>
+                                        )}
+                                    
 
                                 </MDBCol>
                             </MDBRow>

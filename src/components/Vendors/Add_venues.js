@@ -189,7 +189,8 @@ export default function AddVenue() {
         { value: 'Indoor Event', label: 'Indoor Event' },
         { value: 'Outdoor Event', label: 'Outdoor Event' },
         { value: 'Religious Event', label: 'Religious Event' },
-        { value: 'Family Gathering', label: 'Family Gathering'},
+        { value: 'Family Gathering', label: 'Family Gathering' },
+        { value: 'Cafe', label: 'Cafe' },
         { value: 'Other', label: 'Other' }
     ];
 

@@ -5,6 +5,7 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import Login from "./components/Login"
 import Register from "./components/registerform"
 import Home from "./components/home"
+import Contact from "./components/contact"
 import Footer from "./components/footer"
 import ManagementTab from "./components/ManagementTab"
 import NotFoundPage from "./components/Error"
@@ -16,7 +17,6 @@ import Map from "./components/Venues/map"
 import Services from "./components/Services/services"
 import ServiceDetail from "./components/Services/serviceDetail"
 
-import Dashboard from "./components/Admins/dashboard"
 import AdminBar from "./components/Admins/adminPanel"
 import Admin from "./components/Admins/admin"
 import Venue from "./components/Admins/venue"
@@ -25,6 +25,7 @@ import Service from "./components/Admins/service"
 import AcceptVendor from "./components/Admins/acceptVendor"
 import Booking from "./components/Admins/booking"
 import PendingBooking from "./components/Admins/pendingBooking"
+import Dashboard from "./components/Admins/dashboard"
 
 import AddVenue from "./components/Vendors/Add_venues"
 import NotVerified from "./components/Vendors/notVerified"
@@ -50,7 +51,7 @@ function App() {
                 <Routes>
                     {isAdmin && (
                         <>
-                            <Route path="/" element={<Dashboard/>} />
+                            <Route path="/" element={<Dashboard />} />
                             <Route path="/addAdmin" element={<Admin />} />
                             <Route path="/venue" element={<Venue />} />
                             <Route path="/service" element={<Service />} />
@@ -66,17 +67,18 @@ function App() {
                             <Route path="/" element={<Home />} />
                             <Route path="/addvenue" element={<AddVenue />} />
                             <Route path="/venues" element={<Venues />} />
+                            <Route path="/services" element={<Services />} />
                             <Route path="/notverified" element={<NotVerified />} />
                             <Route path="/venueDetail/:id" element={<VenueDetail />} />
+                            <Route path="/serviceDetail/:id" element={<ServiceDetail />} />
                             <Route path="/kyc" element={<KYCForm />} />
                             <Route path="/addservice" element={<AddService />} />
-                            <Route path="/services" element={<Services />} />
-                            <Route path="/serviceDetail/:id" element={<ServiceDetail />} />
                         </>
                     )}
                     {isCustomer && (
                         <>
                             <Route path="/" element={<Home />} />
+                            <Route path="/contact" element={<Contact />} />
                             <Route path="/venues" element={<Venues />} />
                             <Route path="/venueDetail/:id" element={<VenueDetail />} />
                             <Route path="/services" element={<Services />} />
