@@ -44,14 +44,43 @@ function VenueDetail(props) {
     const [time, setTime] = useState("");
     const [noNumber, setNoNumber] = useState(true);
     const [error, setError] = useState("");
+    const [customer, setCustomer] = useState("");
 
     useEffect(() => {
         getVenue();
     }, []);
 
+    const payment ={
+        "return_url": "http://localhost:3000/",
+        "website_url": "http://localhost:3000/",
+        "amount": venue.price,
+        "purchase_order_id": venue._id,
+        "purchase_order_name": venue.name,
+        "customer_info": {
+            "name": customer.fname,
+            "email": customer.email,
+            "phone": number
+        }, 
+        "amount_breakdown": [
+            {
+                "label": "Total Price",
+                "amount": venue.price
+            }
+        ],
+        "product_details": [
+            {
+                "identity": venue._id,
+                "name": venue.name,
+                "total_price": venue.price,
+                "quantity": 1,
+                "unit_price": venue.price
+            }
+        ]
+    }
+
     const handleRatingChange = (newRating) => {
         if (loggedIn) {
-            // You can make a POST request here to save the rating to your database
+            
             fetch("http://localhost:5000/addRating", {
                 method: "POST",
                 crossDomain: true,
@@ -62,8 +91,8 @@ function VenueDetail(props) {
                 },
                 body: JSON.stringify({
                     token: window.localStorage.getItem("token"),
-                    venueID: null,
-                    serviceID: id,
+                    venueID: id,
+                    serviceID: null,
                     rating: newRating
                 }),
             })
@@ -71,6 +100,7 @@ function VenueDetail(props) {
                 .then((data) => {
                     if (data.status == "success") {
                         getVenue();
+                        console.log(data.data);
 
                     }
                     else if (data.status == "error") {
@@ -145,6 +175,30 @@ function VenueDetail(props) {
 
         }
 
+        fetch("http://localhost:5000/user", {
+            method: "POST",
+            crossDomain: true,
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                "Access-Control-Allow-Origin": "*"
+            },
+            body: JSON.stringify({
+                token: window.localStorage.getItem("token")
+            }),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.status == "success") {
+                    setCustomer(data.data);
+                }
+                else {
+                    setToastTitle("Error");
+                    setToastBody(data.message);
+                    showToast(3000);
+                }
+            });
+
 
         fetch("http://localhost:5000/bookings", {
             method: "POST",
@@ -158,7 +212,6 @@ function VenueDetail(props) {
                 token: window.localStorage.getItem("token"),
                 venueID: id,
                 serviceID: null,
-                phoneNumber: number,
                 date: date,
                 time: time
             }),
@@ -176,6 +229,8 @@ function VenueDetail(props) {
                     setError(data.data);
                 }
             });
+
+        fetch("")
 
 
     }

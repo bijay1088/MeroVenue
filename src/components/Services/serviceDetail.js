@@ -45,8 +45,9 @@ function ServiceDetail(props) {
     }, []);
 
     const handleRatingChange = (newRating) => {
+        console.log(newRating);
         if (loggedIn) {
-            // You can make a POST request here to save the rating to your database
+            
             fetch("http://localhost:5000/addRating", {
                 method: "POST",
                 crossDomain: true,
@@ -143,7 +144,6 @@ function ServiceDetail(props) {
                 token: window.localStorage.getItem("token"),
                 venueID: null,
                 serviceID: id,
-                phoneNumber: number,
                 date: date,
                 time: time
             }),

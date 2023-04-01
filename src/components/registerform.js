@@ -63,7 +63,10 @@ export default function () {
 
                     window.localStorage.setItem("token", data.data);
                     window.localStorage.setItem("loggedIn", true);
-                    if (role == "Vendor") {
+                    if (role == "Customer") {
+                        window.localStorage.setItem("isCustomer", true);
+                    }
+                    else if (role == "Vendor") {
                         window.localStorage.setItem("isVendor", true);
                     }
                     navigate("/");

@@ -93,6 +93,14 @@ label {
     color: rgb(255,255,255);
     
 }
+.navbar-dark .navbar-toggler-icon {
+    background-image: url("https://icon-library.com/images/white-menu-icon/white-menu-icon-4.jpg") !important;
+}
+.navbar-tab.active {
+    color: rgb(255, 255, 255);
+    font-size: 1.1em;
+    /*border-bottom: 2px solid rgb(255, 255, 255);*/
+}
 /*Login command register form*/
 .gradient-custom-2 {
     /* fallback for old browsers */

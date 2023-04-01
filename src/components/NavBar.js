@@ -1,6 +1,6 @@
 import React from 'react';
 import Container from 'react-bootstrap/Container';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 export default function Menu() {
     const loggedIn = window.localStorage.getItem('loggedIn');
     const vendor = window.localStorage.getItem('isVendor');
+    const customer = window.localStorage.getItem('isCustomer');
     const navigate = useNavigate();
 
     const logout = () => {
@@ -25,39 +26,50 @@ export default function Menu() {
                     <Nav className="me-auto">
                         <Nav.Link>
                             {' '}
-                            <Link className="text-decoration-none  navbar-tab" to="/">
+                            <NavLink className="text-decoration-none  navbar-tab" to="/" activeClassName="active-navlink">
                                 Home
-                            </Link>
+                            </NavLink>
                         </Nav.Link>
                         <Nav.Link>
                             {' '}
-                            <Link className="text-decoration-none  navbar-tab" to="/venues">
+                            <NavLink className="text-decoration-none  navbar-tab" to="/venues" activeClassName="active-navlink">
                                 Venues
-                            </Link>
+                            </NavLink>
                         </Nav.Link>
                         <Nav.Link>
                             {' '}
-                            <Link className="text-decoration-none  navbar-tab" to="/services">
+                            <NavLink className="text-decoration-none  navbar-tab" to="/services" activeClassName="active-navlink">
                                 Services
-                            </Link>
+                            </NavLink>
                         </Nav.Link>
                         {vendor ? (
-                            <><Nav.Link>
-                                {' '}
-                                <Link className="text-decoration-none  navbar-tab" to="/addvenue">
-                                    Add Venue
-                                </Link>
-                            </Nav.Link><Nav.Link>
+                            <>
+                                <Nav.Link>
                                     {' '}
-                                    <Link className="text-decoration-none  navbar-tab" to="/addservice">
+                                    <NavLink className="text-decoration-none  navbar-tab" to="/addvenue" activeClassName="active-navlink">
+                                        Add Venue
+                                    </NavLink>
+                                </Nav.Link>
+                                <Nav.Link>
+                                    {' '}
+                                    <NavLink className="text-decoration-none  navbar-tab" to="/addservice" activeClassName="active-navlink">
                                         Add Service
-                                    </Link>
-                                </Nav.Link></>
-                        ) : (
-                            null
-                        )}
+                                    </NavLink>
+                                </Nav.Link>
+                            </>
+                        ) : null}
                     </Nav>
                     <Nav>
+                        {customer ? (
+                            <Nav.Link>
+                                {' '}
+                                <NavLink className="text-decoration-none  navbar-tab" to="/" activeClassName="active-navlink">
+                                    Bookings
+                                </NavLink>
+                            </Nav.Link>
+                        ) : null}
+
+                        &nbsp;&nbsp;&nbsp;
                         {loggedIn ? (
                             <button onClick={logout} className="btn btn-primary">
                                 Log Out

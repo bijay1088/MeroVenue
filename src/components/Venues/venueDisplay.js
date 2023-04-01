@@ -113,43 +113,39 @@ function VenueDisplay(props) {
 
 
     return (
-        <>
-
-            <div className="row justify-content-center mt-3" >
-                <div className="col-lg-3 col-md-12 mb-3 d-flex justify-content-center align-items-center">
-                    <Dropdown>
-                        <Dropdown.Toggle variant="success" id="dropdown-basic">
-                            Category
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                            {options.map((option) => (
-                                <Dropdown.Item
-                                    key={option.value}
-                                    onClick={() => handleOptionSelect(option.value)}
-                                >
-                                    {option.label}
-                                </Dropdown.Item>
-                            ))}
-                        </Dropdown.Menu>
-                    </Dropdown>
-                </div>
-                <div className="col-lg-3 col-md-12 mb-3 d-flex justify-content-center align-items-center">
-                    <MDBInputGroup>
-                        <MDBInput label='Search' value={searchTerm} onChange={handleSearch} />
-                        <MDBBtn rippleColor='dark'>
-                            <MDBIcon icon='search' />
-                        </MDBBtn>
-                    </MDBInputGroup>
-                </div>
-            </div>
-
-
-            
+        <>   
 
             <MDBContainer fluid>
-                <MDBRow className="justify-content-center mb-0">
-                    <MDBCol md="12" xl="10">
-                        <MDBCard className="shadow-0 border rounded-3 mt-5 mb-3">
+                <MDBRow className="justify-content-center mb-2">
+                    <MDBCol md="12" xl="10" >
+                        <MDBCard className="shadow-0 border rounded-3 mt-5 mb-3" >
+                            <div className="row justify-content-center mt-3" >
+                                <div className="col-lg-3 col-md-6 col-sm-6 mb-3 d-flex justify-content-center align-items-center">
+                                    <Dropdown>
+                                        <Dropdown.Toggle variant="success" id="dropdown-basic">
+                                            Category
+                                        </Dropdown.Toggle>
+                                        <Dropdown.Menu>
+                                            {options.map((option) => (
+                                                <Dropdown.Item
+                                                    key={option.value}
+                                                    onClick={() => handleOptionSelect(option.value)}
+                                                >
+                                                    {option.label}
+                                                </Dropdown.Item>
+                                            ))}
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+                                </div>
+                                <div className="col-lg-3 col-md-6 col-sm-6 mb-3 d-flex justify-content-center align-items-center">
+                                    <MDBInputGroup>
+                                        <MDBInput label='Search' value={searchTerm} onChange={handleSearch} />
+                                        <MDBBtn rippleColor='dark'>
+                                            <MDBIcon icon='search' />
+                                        </MDBBtn>
+                                    </MDBInputGroup>
+                                </div>
+                            </div>
                             <MDBCardBody>
                                 <MDBRow>
                                     <MDBCol md="12" xl="10">

@@ -45,12 +45,14 @@ export default function (props) {
                         if (role == "Admin") {
                             window.localStorage.setItem("isAdmin", true);
                         }
-                        if (role == "Vendor") {
+                        else if (role == "Vendor") {
                             window.localStorage.setItem("isVendor", true);
                         }
+                        else if (role == "Customer") {
+                            window.localStorage.setItem("isCustomer", true);
+                        }
                         if (href) {
-                            window.location.href = href;
-                            
+                            window.location.href = href;  
                         }
                         else {
                             navigate("/");
