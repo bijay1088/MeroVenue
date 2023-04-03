@@ -50,33 +50,7 @@ function VenueDetail(props) {
         getVenue();
     }, []);
 
-    const payment ={
-        "return_url": "http://localhost:3000/",
-        "website_url": "http://localhost:3000/",
-        "amount": venue.price,
-        "purchase_order_id": venue._id,
-        "purchase_order_name": venue.name,
-        "customer_info": {
-            "name": customer.fname,
-            "email": customer.email,
-            "phone": number
-        }, 
-        "amount_breakdown": [
-            {
-                "label": "Total Price",
-                "amount": venue.price
-            }
-        ],
-        "product_details": [
-            {
-                "identity": venue._id,
-                "name": venue.name,
-                "total_price": venue.price,
-                "quantity": 1,
-                "unit_price": venue.price
-            }
-        ]
-    }
+    
 
     const handleRatingChange = (newRating) => {
         if (loggedIn) {
@@ -230,7 +204,63 @@ function VenueDetail(props) {
                 }
             });
 
-        fetch("")
+
+        const payment = {
+            //"return_url": "http://localhost:3000/",
+            //"website_url": "http://localhost:3000/",
+            //"amount": venue.price * 100,
+            //"purchase_order_id": venue._id,
+            //"purchase_order_name": venue.name,
+            //"customer_info": {
+            //    "name": customer.fname,
+            //    "email": customer.email,
+            //    "phone": number
+            //},
+            //"amount_breakdown": [
+            //    {
+            //        "label": "Total Price",
+            //        "amount": venue.price
+            //    }
+            //],
+            //"product_details": [
+            //    {
+            //        "identity": venue._id,
+            //        "name": venue.name,
+            //        "total_price": venue.price,
+            //        "quantity": 1,
+            //        "unit_price": venue.price
+            //    }
+            //]
+
+            "public_key": "test_public_key_ab8c77b186e0452f97d609396c18f85e",
+            "mobile": number,
+            "transaction_pin": "1234",
+            "amount": venue.price*100,
+            "product_identity": "book/id-120",
+            "product_name": "A Song of Ice and Fire",
+            "product_url": "http://bookexample.com"
+        }
+
+        const config = "a9ab095dc6164cacab5e16018e29cfc4";
+        
+
+        fetch("https://khalti.com/api/v2/payment/initiate/", {
+            method: "POST",
+            crossDomain: true,
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                "Access-Control-Allow-Origin": "*"
+            },
+            body: JSON.stringify({
+                data: payment
+
+            }),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data);
+            })
 
 
     }

@@ -1,7 +1,8 @@
 ﻿import React, { Component } from 'react'
-import Logo from "../images/MeroVenue-logos_white.png"
+import Logo from "../images/Marrying2.png"
 
 const loggedIn = window.localStorage.getItem('loggedIn');
+
 
 export default class home extends Component {
 

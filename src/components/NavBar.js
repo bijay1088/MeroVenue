@@ -63,7 +63,7 @@ export default function Menu() {
                         {customer ? (
                             <Nav.Link>
                                 {' '}
-                                <NavLink className="text-decoration-none  navbar-tab" to="/" activeClassName="active-navlink">
+                                <NavLink className="text-decoration-none  navbar-tab" to="/booking" activeClassName="active-navlink">
                                     Bookings
                                 </NavLink>
                             </Nav.Link>

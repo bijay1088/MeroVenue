@@ -122,7 +122,7 @@ function ServiceDisplay(props) {
                             <div className="row justify-content-center mt-3" >
                                 <div className="col-lg-3 col-md-6 col-sm-6 mb-3 d-flex justify-content-center align-items-center">
                                     <Dropdown>
-                                        <Dropdown.Toggle variant="success" id="dropdown-basic">
+                                        <Dropdown.Toggle variant="primary" id="dropdown-basic">
                                             Category
                                         </Dropdown.Toggle>
                                         <Dropdown.Menu>

@@ -9,6 +9,7 @@ import Contact from "./components/contact"
 import Footer from "./components/footer"
 import ManagementTab from "./components/ManagementTab"
 import NotFoundPage from "./components/Error"
+import Bookings from "./components/Bookings"
 
 import Venues from "./components/Venues/venues"
 import VenueDetail from "./components/Venues/venueDetail"
@@ -84,6 +85,7 @@ function App() {
                             <Route path="/services" element={<Services />} />
                             <Route path="/serviceDetail/:id" element={<ServiceDetail />} />
                             <Route path="/map" element={<Map />} />
+                            <Route path="/booking" element={<Bookings/> }/>
                            
                         </>
                     )}

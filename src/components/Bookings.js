@@ -1,6 +1,5 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import DataTable from 'react-data-table-component';
@@ -14,7 +13,6 @@ export default function Booking() {
     let [modalName, setModalName] = useState("");
     let [modalTitle, setModalTitle] = useState("");
     let [modalBody, setModalBody] = useState("");
-    let [showAcceptModal, setshowAcceptModal] = useState(false);
     let [showRejectModal, setshowRejectModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [show, setShow] = useState(false);
@@ -26,12 +24,22 @@ export default function Booking() {
     }, []);
 
     const getBookings = () => {
-        fetch(`http://localhost:5000/getBookings`, {
-            method: "GET",
+        fetch("http://localhost:5000/getSpecificUserBookings", {
+            method: "POST",
+            crossDomain: true,
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                "Access-Control-Allow-Origin": "*"
+            },
+            body: JSON.stringify({
+                token: window.localStorage.getItem("token")
+            }),
         })
             .then((res) => res.json())
             .then((data) => {
                 setBookings(data.data);
+                console.log(data.data);
             });
 
     };
@@ -41,13 +49,6 @@ export default function Booking() {
         setShow(true);
         setTimer(setTimeout(() => setShow(false), duration));
     };
-
-    const acceptModal = (id, name) => {
-        setModalID(id);
-        setModalName(name);
-        setshowAcceptModal(true);
-
-    }
 
     const rejectModal = (id, name) => {
         setModalID(id);
@@ -98,8 +99,7 @@ export default function Booking() {
                 <div>
                     {row.status === "Pending" &&
                         <>
-                            <button className="btn btn-primary my-1" onClick={() => acceptModal(row._id, row.customerName)}>Accept</button>
-                            <button className="btn btn-danger my-1" onClick={() => rejectModal(row._id, row.customerName)}>Reject</button>
+                            <button className="btn btn-danger my-1" onClick={() => rejectModal(row._id, row.venueName)}>Cancel</button>
                         </>
                     }
                 </div>
@@ -110,53 +110,23 @@ export default function Booking() {
         }
     ];
 
+
     const filteredData = bookings.filter(
-        (item) =>
-            item.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            item.venueName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            item.serviceName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            item.status.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+            (item) =>
+                item.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                item.venueName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                item.serviceName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                item.status.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+    
 
     const handleSearch = (query) => {
         setSearchQuery(query);
     };
 
-    const acceptBooking = (id) => {
-        setshowAcceptModal(false);
-        fetch("http://localhost:5000/acceptBooking", {
-            method: "POST",
-            crossDomain: true,
-            headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-                "Access-Control-Allow-Origin": "*"
-            },
-            body: JSON.stringify({
-                token: window.localStorage.getItem("token"),
-                id: id,
-            }),
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.status == "success") {
-                    setModalTitle("Successful");
-                    setModalBody(modalName + " has been accepted successfully.");
-                    showToast(3000);
-                }
-                else {
-                    setModalTitle("Something went wrong");
-                    setModalBody(data.message);
-                    showToast(3000);
-
-                }
-                getBookings();
-            });
-    }
-
     const rejectBooking = (id) => {
         setshowRejectModal(false);
-        fetch("http://localhost:5000/rejectBooking", {
+        fetch("http://localhost:5000/cancelBooking", {
             method: "POST",
             crossDomain: true,
             headers: {
@@ -173,7 +143,7 @@ export default function Booking() {
             .then((data) => {
                 if (data.status == "success") {
                     setModalTitle("Successful");
-                    setModalBody(modalName + " has been rejected successfully.");
+                    setModalBody(modalName + " has been cancelled successfully.");
                     showToast(3000);
                 }
                 else {
@@ -214,36 +184,17 @@ export default function Booking() {
             {/*verification for rejecting*/}
             <Modal show={showRejectModal} onHide={() => setshowRejectModal(false)}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Are you sure you want to reject?</Modal.Title>
+                    <Modal.Title>Are you sure you want to cancel?</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <p>Are you sure you want to reject <b>{modalName}</b> booking.</p>
+                    <p>Are you sure you want to cancel <b>{modalName}</b> booking.</p>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="btn btn-secondary" onClick={() => setshowRejectModal(false)}>
                         Close
                     </Button>
                     <Button variant="btn btn-danger" onClick={() => rejectBooking(modalID)}>
-                        Reject
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-
-            {/*verification for accepting*/}
-
-            <Modal show={showAcceptModal} onHide={() => setshowAcceptModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Are you sure you want to accept?</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <p>Have you contacted vendors to make sure they are available for <b>{modalName}</b> Booking?</p>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="btn btn-secondary" onClick={() => setshowAcceptModal(false)}>
-                        Close
-                    </Button>
-                    <Button variant="btn btn-primary" onClick={() => acceptBooking(modalID)}>
-                        Accept
+                        Cancel
                     </Button>
                 </Modal.Footer>
             </Modal>

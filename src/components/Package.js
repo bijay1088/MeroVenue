@@ -45,12 +45,18 @@ function Package() {
     }
 
     function priceCalculator() {
-        let total = venue.price;
+        let total = 0
+        if (venue) {
+            total = venue.price;
+        }
+        
         services.forEach(service => {
             total += service.price;
         });
         setTotalPrice(total);
     }
+
+
     useEffect(() => {
         fetchData();
     }, []);
@@ -360,17 +366,17 @@ function Package() {
             </div>
 
 
-            {venue && services.length > 0 ? 
+            {venue || services.length > 0 ? 
+
                 <>
-                <div className="d-flex justify-content-end">
-                    <h5>Total price: {totalPrice}</h5>&nbsp;&nbsp;&nbsp;
-                </div>
-                <div className="d-flex justify-content-end">
-                    <Button variant="primary" class="hide-on-print" onClick={showModal}>Checkout</Button>{' '}
-                </div>
-            </>
-                
-                : null}
+                    <div className="d-flex justify-content-end">
+                        <h5>Total price: {totalPrice}</h5>&nbsp;&nbsp;&nbsp;
+                    </div>
+                    <div className="d-flex justify-content-end">
+                        <Button variant="primary" class="hide-on-print" onClick={showModal}>Checkout</Button>{' '}
+                    </div>
+                </>
+                :null }
             
             
 
