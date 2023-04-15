@@ -19,6 +19,7 @@ import './serviceDetail.css';
 import { Toast } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
 import Rating from 'react-rating-stars-component';
+import Loading from "../../images/loading.gif";
 
 
 
@@ -39,6 +40,11 @@ function ServiceDetail(props) {
     const [time, setTime] = useState("");
     const [noNumber, setNoNumber] = useState(true);
     const [error, setError] = useState("");
+    const [showReviewModal, setShowReviewModal] = useState("");
+    const [reviewSubject, setReviewSubject] = useState("");
+    const [reviewDesc, setReviewDesc] = useState("");
+    const [review, setReview] = useState([]);
+    const moment = require('moment');
 
     useEffect(() => {
         getService();
@@ -222,6 +228,23 @@ function ServiceDetail(props) {
             .then((res) => res.json())
             .then((data) => {
                 setService(data.data);
+                getReview();
+                
+            });
+    };
+
+    const getReview=()=>{
+        fetch(`http://localhost:5000/getReview/${id}`, {
+            method: "GET",
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.status == "success") {
+                    setReview(data.data);
+                }
+                else if (data.status == "error") {
+                    console.log(data.message);
+                }
                 
             });
     };
@@ -269,144 +292,239 @@ function ServiceDetail(props) {
 
     }
 
+    function addReview(){
+
+        if (!reviewSubject) {
+            setError("Please enter subject");
+            return;
+        }
+
+        if (!reviewDesc) {
+            setError("Please enter description")
+            return;
+        }
+
+        fetch("http://localhost:5000/addReview", {
+                method: "POST",
+                crossDomain: true,
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                    "Access-Control-Allow-Origin": "*"
+                },
+                body: JSON.stringify({
+                    token: window.localStorage.getItem("token"),
+                    productID: id,
+                    reviewSubject,
+                    reviewDesc
+                }),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.status == "success") {
+                        setToastTitle("Successful");
+                        setToastBody("Review has been added successfully.");
+                        showToast(5000);
+                        getReview();
+                    }
+                    else if (data.status == "error") {
+                        setToastTitle("Error");
+                        setToastBody(data.message);
+                        showToast(3000);
+                    }
+                });
+        setShowReviewModal(false);
+    }
+
      
 
     return (
         <>
         <MDBContainer fluid>
-            <MDBRow className="justify-content-center mb-0">
-            {Object.keys(service).length > 0 && (
-                    <MDBCard className="shadow-0 border rounded-3 mt-5 mb-3">
-                        <MDBCardBody>
-                            <MDBRow>
-                                <MDBCol md="6" lg="6" className="mb-4 mb-lg-0">
-                                    <MDBCarousel showControls showIndicators>
-                                        <MDBCarouselItem
-                                            className='w-100 d-block'
-                                            itemId={1}
-                                            src={`http://localhost:5000/${service.image}`}
-                                            alt='Image not loaded.'
-                                        />
-                                        {service.image2 ? (
-                                            <MDBCarouselItem
-                                                className='w-100 d-block'
-                                                itemId={2}
-                                                src={`http://localhost:5000/${service.image2}`}
-                                                alt='Image not loaded.'
-                                            />
-                                        ) : null}
-                                        {service.image3 ? (
-                                            <MDBCarouselItem
-                                                className='w-100 d-block'
-                                                itemId={3}
-                                                src={`http://localhost:5000/${service.image3}`}
-                                                alt='Image not loaded.'
-                                            />
-                                        ) : null}
-                                    </MDBCarousel>
-
-                                    
-                                </MDBCol>
-                                <MDBCol md="6" className="bg-light px-4 py-4">
-                                    <div className="mb-4">
-                                        <h1>{service.serviceName}</h1>
-                                    </div>
-                                    
-                                        <div className="d-flex flex-row align-items-center mb-3">
-                                            <div className="text-danger mb-1 me-2">
-                                                <Rating
-                                                    count={5}
-                                                    value={service.avgRating}
-                                                    onChange={handleRatingChange}
-                                                    size={30}
-                                                    activeColor="#ffd700"
-                                                />
-                                            </div>
-                                            <span className="my-3">{service.avgRating}</span>
-                                        </div>
+                <MDBRow className="justify-content-center mb-0">
+                    <MDBCol md="12" xl="10" >
+                        {Object.keys(service).length > 0 && (
+                            <><h3 class="mt-4 ms-5"><a href="/services"><span>Service </span></a> / {service.serviceName}</h3>
+                                <MDBCard className="shadow-0 border rounded-3 mt-5 mb-3">
+                                    <MDBCardBody>
+                                        <MDBRow>
+                                            <MDBCol md="6" lg="6" className="mb-4 mb-lg-0">
+                                                <MDBCarousel showControls showIndicators>
+                                                    <MDBCarouselItem
+                                                        className='w-100 d-block'
+                                                        itemId={1}
+                                                        src={`http://localhost:5000/${service.image}`}
+                                                        alt='Image not loaded.' />
+                                                    {service.image2 ? (
+                                                        <MDBCarouselItem
+                                                            className='w-100 d-block'
+                                                            itemId={2}
+                                                            src={`http://localhost:5000/${service.image2}`}
+                                                            alt='Image not loaded.' />
+                                                    ) : null}
+                                                    {service.image3 ? (
+                                                        <MDBCarouselItem
+                                                            className='w-100 d-block'
+                                                            itemId={3}
+                                                            src={`http://localhost:5000/${service.image3}`}
+                                                            alt='Image not loaded.' />
+                                                    ) : null}
+                                                </MDBCarousel>
 
 
-                                    <div className="d-flex justify-content-start">
-                                        <div>
-                                            <div className="mb-3">
-                                                <MDBIcon fas icon="tag" />
-                                                <strong className="mx-2">Category:  </strong>
-                                                <span>&nbsp; </span>
-                                                {service.serviceType}
-                                            </div>
-                                            <div className="mb-3">
-                                                <MDBIcon fas icon="map-marker-alt" />
-                                                <strong className="mx-2">Address:  </strong>
-                                                <span>&nbsp; {service.location}</span>
-                                            </div>
-                                        </div>
+                                            </MDBCol>
+                                            <MDBCol md="6" className="bg-light px-4 py-4">
+                                                <div className="mb-4">
+                                                    <h1>{service.serviceName}</h1>
+                                                </div>
 
-                                        <div className="mx-5">
-                                            <div className="mb-3">
-                                                <MDBIcon fas icon="phone" />
-                                                <strong className="mx-2">Phone:  </strong>
-                                                <span>&nbsp; {service.contactInfo}</span>
-                                            </div>
-                                            <div className="mb-3">
-                                                <MDBIcon fas icon="envelope" />
-                                                <strong className="mx-2">Email:  </strong>
-                                                <span>&nbsp; {service.email}</span>
-                                            </div>
-                                        </div>
-                                    </div>
+                                                <div className="d-flex flex-row align-items-center mb-3">
+                                                    <div className="text-danger mb-1 me-2">
+                                                        <Rating
+                                                            count={5}
+                                                            value={service.avgRating}
+                                                            onChange={handleRatingChange}
+                                                            size={30}
+                                                            activeColor="#ffd700" />
+                                                    </div>
+                                                    <span className="my-3">{service.avgRating}</span>
+                                                </div>
 
-                                    <div className="mb-4 mb-md-0 mt-3">
 
-                                        <div className="fs-5 mb-3">
-                                            <strong>Price:  </strong>
-                                            <MDBIcon fas icon="money-bill" />
-                                            <span>&nbsp; {service.price}</span>
-                                        </div>
-                                        <br/>
-                                        <h4>
-                                            About &nbsp;
-                                            <MDBIcon fas icon="info-circle" />
-                                        </h4>
-                                        
-                                        {service.about }
-                                    </div>
-                                        {isVendor ? null : (
-                                            <div className="mt-5">
-                                                <MDBBtn
-                                                    className="btn btn-inline-primary btn-rounded btn-md"
-                                                    onClick={showModal}
-                                                    size="md">
-                                                    Book Now
-                                                </MDBBtn>
-                                                &nbsp;&nbsp;&nbsp;
-                                                <MDBBtn
-                                                    className="btn btn-inline-secondary btn-rounded btn-md"
-                                                    size="md"
-                                                    onClick={appPackage}                                        >
-                                                    Add to Package
-                                                </MDBBtn>
-                                            </div>
+                                                <div className="d-flex justify-content-start">
+                                                    <div>
+                                                        <div className="mb-3">
+                                                            <MDBIcon fas icon="tag" />
+                                                            <strong className="mx-2">Category:  </strong>
+                                                            <span>&nbsp; </span>
+                                                            {service.serviceType}
+                                                        </div>
+                                                        <div className="mb-3">
+                                                            <MDBIcon fas icon="map-marker-alt" />
+                                                            <strong className="mx-2">Address:  </strong>
+                                                            <span>&nbsp; {service.location}</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="mx-5">
+                                                        <div className="mb-3">
+                                                            <MDBIcon fas icon="phone" />
+                                                            <strong className="mx-2">Phone:  </strong>
+                                                            <span>&nbsp; {service.contactInfo}</span>
+                                                        </div>
+                                                        <div className="mb-3">
+                                                            <MDBIcon fas icon="envelope" />
+                                                            <strong className="mx-2">Email:  </strong>
+                                                            <span>&nbsp; {service.email}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="mb-4 mb-md-0 mt-3">
+
+                                                    <div className="fs-5 mb-3">
+                                                        <strong>Price:  </strong>
+                                                        <MDBIcon fas icon="money-bill" />
+                                                        <span>&nbsp; {service.price}</span>
+                                                    </div>
+                                                    <br />
+                                                    <h4>
+                                                        About &nbsp;
+                                                        <MDBIcon fas icon="info-circle" />
+                                                    </h4>
+
+                                                    {service.about}
+                                                </div>
+                                                {isVendor ? null : (
+                                                    <div className="mt-5">
+                                                        <MDBBtn
+                                                            className="btn btn-inline-primary btn-rounded btn-md"
+                                                            onClick={showModal}
+                                                            size="md">
+                                                            Book Now
+                                                        </MDBBtn>
+                                                        &nbsp;&nbsp;&nbsp;
+                                                        <MDBBtn
+                                                            className="btn btn-inline-secondary btn-rounded btn-md"
+                                                            size="md"
+                                                            onClick={appPackage}>
+                                                            Add to Package
+                                                        </MDBBtn>
+                                                        &nbsp;&nbsp;&nbsp;
+                                                        {loggedIn ? (
+                                                            <MDBBtn
+                                                                className="btn btn-inline-secondary btn-rounded btn-md mt-2"
+                                                                size="md"
+                                                                onClick={() => setShowReviewModal(true)}>
+                                                                Add Review
+                                                            </MDBBtn>
+                                                        ): null}   
+                                                    </div>
+                                                )}
+
+
+                                            </MDBCol>
+                                        </MDBRow>
+                                    </MDBCardBody>
+                                </MDBCard></>
+
+                        )}
+
+                        <MDBCard className="shadow-0 border rounded-3 mt-5 mb-3 justify-content-start">
+                            <MDBCardBody>
+                                <MDBRow>
+                                    <MDBCol md="6" lg="6" className="mb-4 mb-lg-0" >
+                                        {service.locationCoordinates && (
+                                            <MapContainer ref={mapRef} center={JSON.parse(service.locationCoordinates[0])} zoom={13} style={{ height: '60vh'}}>
+                                                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                                                {JSON.parse(service.locationCoordinates[0]) && <Marker position={JSON.parse(service.locationCoordinates[0])} />}
+                                            </MapContainer>
                                         )}
-                                    
+                                    </MDBCol>
+                                    <MDBCol md="6" lg="6" className="mb-4 mb-lg-0" >
+                                    <div class="review-block">
+                                        {review.length>0 ? 
+                                        (
+                                            <>
+                                                {review.map((review) => (
+                                                    <>
+                                                    <div className="row m-2">
+                                                        <div className="col-sm-3">
+                                                            <div className="review-block-name"><a href="#">{review.fname}</a></div>
+                                                            <div className="review-block-date">
+                                                                {moment(review.createdAt).format('MMMM D, YYYY')}
+                                                                <br/>
+                                                                {moment(review.createdAt).fromNow()}
+                                                            </div>
+        
+                                                        </div>
+                                                        <div className="col-sm-9">
+                                                            <div className="review-block-title">{review.reviewSubject}</div>
+                                                            <div className="review-block-description">{review.reviewDesc}</div>
+                                                        </div>
+                                                    </div>
+                                                    <hr />
+                                                    </>
+                                                ))}
+                                            </>
+                                        )
+                                         : (
+                                            <div style={{ height: '60vh', textAlign: 'center', backgroundImage: `url(${Loading})`, backgroundRepeat: 'no-repeat', backgroundPosition: 'center', backgroundSize: 'auto 40%'}}>
+                                                <h3>No Reviews</h3>
+                                            </div>
+                                         
+                                         )}
+                                        
+                                        
+                                    </div>
+                                    </MDBCol>
+                                </MDBRow>
+                            </MDBCardBody>
+                                
+                        </MDBCard>
 
-                                </MDBCol>
-                            </MDBRow>
-                        </MDBCardBody>
-                    </MDBCard>
-
-                )}
-
-                <MDBCard className="shadow-0 border rounded-3 mt-5 mb-3 justify-content-start">
-                    {service.locationCoordinates && (
-                        <MapContainer ref={mapRef} center={JSON.parse(service.locationCoordinates[0])} zoom={13} style={{ height: '500px', width: '600px' }}>
-                            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                            {JSON.parse(service.locationCoordinates[0]) && <Marker position={JSON.parse(service.locationCoordinates[0])} />}
-                        </MapContainer>
+                    </MDBCol>
                     
-                    
-                        ) 
-                    }
-                </MDBCard>
                 
                 
             </MDBRow>
@@ -470,6 +588,44 @@ function ServiceDetail(props) {
                     </Button>
                     <Button variant="btn btn-primary" onClick={() => booknow()}>
                         Book
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal show={showReviewModal} onHide={()=>setShowReviewModal(false)}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Add Review</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        
+                    
+                    <div className="form-group mt-3 col-md-12">
+                        <label>Subject</label>
+                        <input
+                            type="text"
+                            className="form-control mt-1"
+                            value={reviewSubject}
+                            onChange={(e) => setReviewSubject(e.target.value)} />
+                    </div>
+
+                    <div className="form-group mt-3 col-md-12">
+                        <label>Review</label>
+                        <textarea
+                            type="text"
+                            className="form-control mt-1"
+                            value={reviewDesc}
+                            onChange={(e) => setReviewDesc(e.target.value)}
+                            rows={4} />
+                    </div>
+                    {<div className="error-message mt-3">{error}</div>}
+
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="btn btn-secondary" onClick={() => setShowReviewModal(false)}>
+                        Close
+                    </Button>
+                    <Button variant="btn btn-primary" onClick={() => addReview()}>
+                        Add
                     </Button>
                 </Modal.Footer>
             </Modal>

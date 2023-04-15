@@ -1,10 +1,15 @@
 {
   "ExpandedNodes": [
     "",
+    "\\public",
     "\\src",
     "\\src\\components",
+    "\\src\\components\\Admins",
+    "\\src\\components\\Khalti",
+    "\\src\\components\\Services",
+    "\\src\\components\\Vendors",
+    "\\src\\components\\Venues",
     "\\src\\images"
   ],
-  "SelectedNode": "\\src\\App.js",
   "PreviewInSolutionExplorer": false
 }

@@ -164,6 +164,10 @@ export default function HeaderAndFooterExample() {
 
     return (
         <>
+            <div className="d-flex justify-content-center my-2">
+                <h2>Pending Bookings</h2>
+
+            </div>
             <div class="mt-3 px-3 d-flex justify-content-center" >
                 <div class="flex row inform-card my-3 m-5 col-sm-12 col-md-12 col-lg-6">
                     {bookings.length>0 ?

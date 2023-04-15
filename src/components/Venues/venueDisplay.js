@@ -117,10 +117,14 @@ function VenueDisplay(props) {
 
             <MDBContainer fluid>
                 <MDBRow className="justify-content-center mb-2">
+                    <MDBCol lg='9'>
+
+                        <h3 class="mt-4"><a href="/"><span>Home </span></a> / Venues</h3>
+                    </MDBCol>
                     <MDBCol md="12" xl="10" >
                         <MDBCard className="shadow-0 border rounded-3 mt-5 mb-3" >
                             <div className="row justify-content-center mt-3" >
-                                <div className="col-lg-3 col-md-6 col-sm-6 mb-3 d-flex justify-content-center align-items-center">
+                                <div className="col-lg-3 col-md-6 col-6 mb-3 d-flex justify-content-center align-items-center">
                                     <Dropdown>
                                         <Dropdown.Toggle variant="primary" id="dropdown-basic">
                                             Category
@@ -137,7 +141,7 @@ function VenueDisplay(props) {
                                         </Dropdown.Menu>
                                     </Dropdown>
                                 </div>
-                                <div className="col-lg-3 col-md-6 col-sm-6 mb-3 d-flex justify-content-center align-items-center">
+                                <div className="col-lg-3 col-md-6 col-6 mb-3 d-flex justify-content-center align-items-center">
                                     <MDBInputGroup>
                                         <MDBInput label='Search' value={searchTerm} onChange={handleSearch} />
                                     </MDBInputGroup>

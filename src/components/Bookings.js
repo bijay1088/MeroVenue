@@ -90,7 +90,22 @@ export default function Booking() {
         },
         {
             name: 'Status',
-            selector: 'status',
+            cell: row => (
+                <div>
+                    {row.status === "Pending" &&
+                        <span className="badge badge-warning" style={{ fontSize: "14px" }}>{row.status}</span> 
+                    }
+                    {row.status === "Rejected" && 
+                        <span className="badge badge-danger " style={{ fontSize: "14px" }}>{row.status}</span>
+                    }
+                    {row.status === "Cancelled" && 
+                        <span className="badge badge-danger " style={{ fontSize: "14px" }}>{row.status}</span>
+                    }
+                    {row.status === "Accepted" &&
+                        <span className="badge badge-success" style={{ fontSize: "14px" }}>{row.status}</span>
+                    }
+                </div>
+            ),
             sortable: true
         },
         {
@@ -158,25 +173,28 @@ export default function Booking() {
 
     return (
         <>
-            <div className="d-flex justify-content-center my-2">
-                <h2>Bookings</h2>
-
-            </div>
-            <div className="container" style={{ height: "100vh" }}>
-                <div className="row justify-content-center">
-                    <div className="col-12 col-md-10 col-lg-12">
-                        <div className="my-2 col-lg-6 d-flex justify-content-center">
-                            <SearchBox placeholder="Search..." onChange={handleSearch} />
-                        </div>
-                        <div className="table-responsive">
-                            <DataTable
-                                columns={columns}
-                                data={filteredData}
-                                pagination={true}
-                                highlightOnHover={true}
-                                striped={true}
-                            />
-                        </div>
+            <div className="container" style={{ height: "90vh" }}>
+                <div className="row mt-5 mb-3 px-4">
+                    <div className="col-lg-6">
+                        <h2><a href="/"><span>Home </span></a> / Bookings</h2>
+                    </div>
+                    <div className="col-lg-6 d-flex justify-content-end">
+                        <SearchBox placeholder="Search..." onChange={handleSearch} />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="d-flex justify-content-center col-12 col-md-10 col-lg-12">
+                       
+                            <div className="table-responsive w-100 table-striped">
+                                <DataTable
+                                    columns={columns}
+                                    data={filteredData}
+                                    pagination={true}
+                                    highlightOnHover={true}
+                                    striped={true}
+                                />
+                            </div>
+                 
                     </div>
                 </div>
             </div>

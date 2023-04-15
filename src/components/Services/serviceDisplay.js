@@ -115,6 +115,11 @@ function ServiceDisplay(props) {
 
             <MDBContainer fluid>
                 <MDBRow className="justify-content-center mb-0">
+                    <MDBCol lg='9'>
+
+                        <h3 class="mt-4"><a href="/"><span>Home </span></a> / Services</h3>
+                    </MDBCol>
+
                     <MDBCol md="12" xl="10">
                         <MDBCard className="shadow-0 border rounded-3 mt-5 mb-3">
 

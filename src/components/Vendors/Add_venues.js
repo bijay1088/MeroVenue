@@ -5,6 +5,20 @@ import Select from 'react-select';
 import { useNavigate } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 
+import {
+    MDBBtn,
+    MDBContainer,
+    MDBRow,
+    MDBCol,
+    MDBCard,
+    MDBCardBody,
+    MDBInput,
+    MDBTextArea,
+    MDBFile,
+    MDBIcon
+}
+    from 'mdb-react-ui-kit';
+
 
 
 
@@ -106,7 +120,13 @@ export default function AddVenue() {
             setError('');
         }
 
-
+        if (image === "") {
+            setError('Set atleast Primary Image')
+            return;
+        }
+        else {
+            setError('');
+        }
 
         if (!location) {
 			setLocationError('Location is required');
@@ -229,95 +249,153 @@ export default function AddVenue() {
     return (
         <>
             {userData.verified ? <></> : navigate("/NotVerified")}
-            
 
-        <div className="container">
-            <h1>Venue Form</h1>
-            <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="venueName">Venue Name</label>
-                    <input type="text" className="form-control" id="venueName" value={venueName} onChange={(e) => setVenueName(e.target.value)} required />
-                    </div>
+            <MDBContainer fluid>
 
-                    <div className="form-group">
-                        <label htmlFor="venueType">Venue Category</label>
-                        <Select
-                            isMulti
-                            name="venueType"
-                            options={options}
-                            value={selectedOptions}
-                            onChange={(selected) => {
-                                setSelectedOptions(selected);
-                                setVenueType(selected.map(option => option.value));
-                            }}
-                            placeholder="Select your venue Category"
-                       
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="packageOption1">Price</label>
-                        <input type="text" className="form-control" id="price" value={price} onChange={(e) => setPrice(e.target.value)} required/>
-                    </div>
-                    {/*<div className="form-group">*/}
-                    {/*    <label htmlFor="packageOption2">Package Option 2</label>*/}
-                    {/*    <input type="text" className="form-control" id="packageOption2" value={price[1]} onChange={(e) => handlePackageOptionChange(e, 1)} />*/}
-                    {/*</div>*/}
-                    {/*<div className="form-group">*/}
-                    {/*    <label htmlFor="packageOption3">Package Option 3</label>*/}
-                    {/*    <input type="text" className="form-control" id="packageOption3" value={price[2]} onChange={(e) => handlePackageOptionChange(e, 2)} />*/}
-                    {/*</div>*/}
-                    <div className="form-group">
-                        <label htmlFor="contactInfo">Contact Information</label>
-                        <input type="text" className="form-control" id="contactInfo" value={contactInfo} onChange={(e) => setContactInfo(e.target.value)} required />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="location">Location</label>
-                        <input type="text" className="form-control" id="location" value={location} onChange={(e) => setLocation(e.target.value)} required />
-                    </div>
-                    <div className="form-group">
-                        <label>Choose location</label>
-                        <br/>
-                        {/*<div className="mapouter">*/}
-                        {/*    <div className="gmap_canvas">*/}
-                        {/*        <iframe width="600" height="500" id="gmap_canvas" src="https://maps.google.com/maps?q=colombo&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>*/}
-                        {/*    </div>*/}
-                        {/*</div>*/}
-                        <button onClick={showMyLocation}>Locate me</button>
-                        <MapContainer ref={mapRef} center={position || [27.67, 85.30]} zoom={13} style={{ height: '50vh' }}>
-                            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                            {position && <Marker position={position} />}
-                            <MapEvents handleMapClick={handleMapClick} />
-                        </MapContainer>
-                    </div>
-                    <div className="form-group">
-                        <label>Image</label>
-                        <input type="file" accept="image/*" className="form-control" onChange={handleImageChange}  />
-                    </div>
-                    <div className="form-group">
-                        <label>Extra image</label>
-                        <input type="file" accept="image/*" className="form-control mb-3" onChange={handleImageChange2} />
-                        <input type="file" accept="image/*" className="form-control" onChange={handleImageChange3} />
-                    </div>
+                <MDBRow className='d-flex justify-content-center align-items-center'>
+                    <MDBCol lg='9' className='my-5'>
 
-                    <div className="form-group">
-                        <label>Capacity</label>
-                        <input type="text" className="form-control" id="capacity" value={capacity} onChange={(e) => setCapacity(e.target.value)} required/>
-                    </div>
+                        <h3 class="mt-2 mb-4"><a href="/venues"><span>Venue </span></a> / Add Venue</h3>
 
-                    <div className="form-group">
-                        <label>About</label>
-                        <textarea type="text" className="form-control" id="about" value={about} onChange={(e) => setAbout(e.target.value)} required />
-                    </div>
+                        <MDBCard>
+                            <MDBCardBody className='px-4'>
 
-                <br/>
 
-                {<div className="error-message">{error}</div>}
+                                <MDBRow className='align-items-center pt-2 pb-3 px-4'>
+                                    <MDBCol md='12' className='ps-3'>
+                                        <h4 className="mb-3">Basic Info</h4>
+                                    </MDBCol>
 
-                <br/>
+                                    <MDBCol md='6' className='pe-5 pb-3'>
+                                        <MDBInput label='Venue Name' size='lg' id='venueName' type='text' value={venueName} onChange={(e) => setVenueName(e.target.value)} />
+                                    </MDBCol>
 
-                <button type="submit" className="btn btn-primary">Submit</button>
-            </form>
-            </div>
+                                    <MDBCol md='6' className='pe-5 pb-3'>
+                                        <MDBInput label='Contact Number' size='lg' id="contactInfo" value={contactInfo} onChange={(e) => setContactInfo(e.target.value)} />
+                                    </MDBCol>
+
+                                    <MDBCol md='3' className='pe-5 pb-3'>
+                                        <MDBInput label='Price' size='lg' id="price" value={price} onChange={(e) => setPrice(e.target.value)} />
+                                    </MDBCol>
+
+                                    <MDBCol md='3' className='pe-5 pb-3'>
+                                        <MDBInput label='Capacity' size='lg' id="capacity" value={capacity} onChange={(e) => setCapacity(e.target.value)} />
+                                    </MDBCol>
+ 
+                                    <MDBCol md='6' className='pe-4 pb-3'>
+                                        <Select
+                                            className=""
+                                            isMulti
+                                            name="venueType"
+                                            options={options}
+                                            value={selectedOptions}
+                                            onChange={(selected) => {
+                                                setSelectedOptions(selected);
+                                                setVenueType(selected.map(option => option.value));
+                                            }}
+                                            placeholder="Select your venue Category"
+                                        />
+                                    </MDBCol>
+
+                                </MDBRow>
+
+
+                                <hr className="mx-n3" />
+
+                                <MDBRow className='align-items-center pt-2 pb-3 px-4'>
+                                    <MDBCol md='12' className='ps-3'>
+                                        <h4 className="mb-5">Images</h4>
+                                    </MDBCol>
+
+                                    <MDBCol md='4' className='pe-5 pb-3'>
+                                        <h6 className="mb-0">Primary Image</h6>
+                                    </MDBCol>
+
+                                    <MDBCol md='9' className='pe-5 mb-3'>
+                                        <MDBFile size='lg' id='customFile' onChange={handleImageChange} />
+                                        <div className="small text-muted mt-2">Upload your Primary Images.</div>
+                                    </MDBCol>
+
+                                    <MDBCol md='4' className='pe-5 pb-3'>
+                                        <h6 className="mb-0">Secondary Image</h6>
+                                    </MDBCol>
+
+                                    <MDBCol md='9' className='pe-5 mb-3'>
+                                        <MDBFile size='lg' id='customFile' onChange={handleImageChange2} />
+                                        <div className="small text-muted mt-2">Upload your Secondary Images.</div>
+                                    </MDBCol>
+
+                                    <MDBCol md='9' className='pe-5 mb-3'>
+                                        <MDBFile size='lg' id='customFile' onChange={handleImageChange3} />
+                                        <div className="small text-muted mt-2">Upload your Secondary Images.</div>
+                                    </MDBCol>
+
+                                </MDBRow>
+
+                                <hr className="mx-n3" />
+
+                                <MDBRow className='align-items-center pt-2 pb-3 px-4'>
+                                    <MDBCol md='12' className='ps-3'>
+                                        <h4 className="mb-3">Location</h4>
+                                    </MDBCol>
+
+                                    <MDBCol md='4' className='pe-5 pb-3'>
+                                        <MDBInput label='Location' size='lg' id="location" value={location} onChange={(e) => setLocation(e.target.value)} />
+                                    </MDBCol>
+                                    <MDBCol md='4' className='pe-5 pb-3'>
+                                        <MDBBtn size='md' onClick={showMyLocation}> <MDBIcon fas icon="map-marker-alt me-2" /> Locate me</MDBBtn>
+                                    </MDBCol>
+
+                                    <MDBCol md='9' className='pe-5'>
+                                        <div className="form-group my-2">
+
+                                            <MapContainer ref={mapRef} center={position || [27.67, 85.30]} zoom={13} style={{ height: '50vh' }}>
+                                                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                                                {position && <Marker position={position} />}
+                                                <MapEvents handleMapClick={handleMapClick} />
+                                            </MapContainer>
+                                        </div>
+                                    </MDBCol>
+
+                                </MDBRow>
+
+                                <hr className="mx-n3" />
+
+                                <MDBRow className='align-items-center pt-2 pb-3 px-4'>
+                                    <MDBCol md='12' className='ps-3'>
+                                        <h4 className="mb-5">Additional Information</h4>
+                                    </MDBCol>
+
+                                    <MDBCol md='12' className='pe-5 pb-3'>
+                                        <MDBTextArea label='About' id="about" value={about} onChange={(e) => setAbout(e.target.value)} rows={5} />
+                                    </MDBCol>
+
+                                </MDBRow>
+
+                                
+
+                                
+
+                                <MDBRow className='align-items-center pt-2 pb-3 px-4'>
+                                    <div className="error-message"><h6>{error}</h6></div>
+
+                                </MDBRow>
+
+                                
+
+                            
+
+                                <hr className="mx-n3" />
+
+                                <MDBBtn className='my-4' size='lg' onClick={handleSubmit}>send application</MDBBtn>
+
+                            </MDBCardBody>
+                        </MDBCard>
+
+                    </MDBCol>
+                </MDBRow>
+
+            </MDBContainer>
 
 
         <Modal show={showModal} onHide={() => setShowModal(false)}>

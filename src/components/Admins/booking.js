@@ -89,6 +89,22 @@ export default function Booking() {
         },
         {
             name: 'Status',
+            cell: row => (
+                <div>
+                    {row.status === "Pending" &&
+                        <span className="badge badge-warning" style={{ fontSize: "14px" }}>{row.status}</span> 
+                    }
+                    {row.status === "Rejected" && 
+                        <span className="badge badge-danger " style={{ fontSize: "14px" }}>{row.status}</span>
+                    }
+                    {row.status === "Cancelled" && 
+                        <span className="badge badge-danger " style={{ fontSize: "14px" }}>{row.status}</span>
+                    }
+                    {row.status === "Accepted" &&
+                        <span className="badge badge-success" style={{ fontSize: "14px" }}>{row.status}</span>
+                    }
+                </div>
+            ),
             selector: 'status',
             sortable: true
         },
