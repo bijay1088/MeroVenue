@@ -22,6 +22,7 @@ import Modal from 'react-bootstrap/Modal';
 import Rating from 'react-rating-stars-component';
 import Empty from "../../images/empty.gif";
 import Loading from "../../images/loading.gif";
+import stripe from 'stripe';
 
 
 function VenueDetail(props) {
@@ -52,6 +53,7 @@ function VenueDetail(props) {
     const [reviewDesc, setReviewDesc] = useState("");
     const [review, setReview] = useState([]);
     const moment = require('moment');
+    const stripeInstance = stripe('sk_test_51Mx9mAJmZ9RFfL2ZuWxc0zZHiG1cPoLT0R5ZjV6DN7mWWoUCxvtIdrfaydyPoUaZ656eZ6lLEdK0lXCH0aCu8arG00Dv98JhSS');
 
 
     useEffect(() => {
@@ -221,7 +223,7 @@ function VenueDetail(props) {
                 if (data.status == "success") {
                     setshowBookModal(false);
                     setToastTitle("Successful");
-                    setToastBody("Venue has been registered.");
+                    setToastBody("Venue has been booked successfully.");
                     showToast(3000);
 
                 }
@@ -232,23 +234,23 @@ function VenueDetail(props) {
 
 
         const payment = {
-            //"return_url": "http://localhost:3000/",
-            //"website_url": "http://localhost:3000/",
-            //"amount": venue.price * 100,
-            //"purchase_order_id": venue._id,
-            //"purchase_order_name": venue.name,
-            //"customer_info": {
+            "return_url": "http://localhost:3000/",
+            "website_url": "http://localhost:3000/",
+            "amount": 1000,
+            "purchase_order_id": 1,
+            "purchase_order_name": "Order 1",
+            // "customer_info": {
             //    "name": customer.fname,
             //    "email": customer.email,
             //    "phone": number
-            //},
-            //"amount_breakdown": [
+            // },
+            // "amount_breakdown": [
             //    {
             //        "label": "Total Price",
             //        "amount": venue.price
             //    }
-            //],
-            //"product_details": [
+            // ],
+            // "product_details": [
             //    {
             //        "identity": venue._id,
             //        "name": venue.name,
@@ -256,37 +258,45 @@ function VenueDetail(props) {
             //        "quantity": 1,
             //        "unit_price": venue.price
             //    }
-            //]
+            // ]
 
-            "public_key": "test_public_key_ab8c77b186e0452f97d609396c18f85e",
-            "mobile": number,
-            "transaction_pin": "1234",
-            "amount": venue.price*100,
-            "product_identity": "book/id-120",
-            "product_name": "A Song of Ice and Fire",
-            "product_url": "http://bookexample.com"
+            // "public_key": "test_public_key_ab8c77b186e0452f97d609396c18f85e",
+            // "mobile": number,
+            // "transaction_pin": "1234",
+            // "amount": venue.price*100,
+            // "product_identity": "book/id-120",
+            // "product_name": "A Song of Ice and Fire",
+            // "product_url": "http://bookexample.com"
         }
 
-        const config = "a9ab095dc6164cacab5e16018e29cfc4";
-        
+        const config = "744e7c5a240f401e95551a71d782da81";
+        const href = window.location.href;
 
-        fetch("https://khalti.com/api/v2/payment/initiate/", {
+        fetch("https://a.khalti.com/api/v2/epayment/initiate/", {
             method: "POST",
-            crossDomain: true,
             headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-                "Access-Control-Allow-Origin": "*"
+                "Authorization": "Key " + config,
+                "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                data: payment
-
-            }),
-        })
+            body: JSON.stringify(
+                {
+                    "return_url": href,
+                    "website_url": "http://localhost:3000/",
+                    "amount": 1000  * 100,
+                    "purchase_order_id": 1,
+                    "purchase_order_name": "Order 1",
+                }
+                )
+            })
             .then((res) => res.json())
             .then((data) => {
                 console.log(data);
+                window.location.href = data.payment_url;
             })
+            .catch((error) => {
+                console.error(error);
+        });
+
 
 
     }

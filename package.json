@@ -34,6 +34,7 @@
     "react-search-box": "^3.0.0",
     "react-select": "^5.7.0",
     "reactstrap": "^9.1.6",
+    "stripe": "^12.1.1",
     "web-vitals": "^2.1.4",
     "yup": "^1.0.2"
   },

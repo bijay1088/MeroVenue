@@ -246,6 +246,34 @@ function Package() {
                     setError(data.data);
                 }
             });
+
+            const config = "744e7c5a240f401e95551a71d782da81";
+            const href = window.location.href;
+    
+            fetch("https://a.khalti.com/api/v2/epayment/initiate/", {
+                method: "POST",
+                headers: {
+                    "Authorization": "Key " + config,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(
+                    {
+                        "return_url": href,
+                        "website_url": "http://localhost:3000/",
+                        "amount": 1000  * 100,
+                        "purchase_order_id": 1,
+                        "purchase_order_name": "Order 1",
+                    }
+                    )
+                })
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log(data);
+                    window.location.href = data.payment_url;
+                })
+                .catch((error) => {
+                    console.error(error);
+            });
         
         
     }
